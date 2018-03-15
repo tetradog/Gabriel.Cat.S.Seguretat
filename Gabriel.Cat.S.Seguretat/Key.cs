@@ -27,8 +27,13 @@ namespace Gabriel.Cat.S.Seguretat
                 else
                     GenerateRandomKey(lenghtRandomKey);
             }
-         
-       
+            public ItemKey(int methodData = 0, int methodPassword = 0, string password = null) : this(methodData, methodPassword, password == null)
+            {
+                if (password != null)
+                    Password = password;
+            }
+
+
             public void GenerateRandomKey(int lenght = 15)
             {
                 if (lenght < 0)
@@ -181,7 +186,7 @@ namespace Gabriel.Cat.S.Seguretat
             for (int i = 0; i < passwords.Count; i++)
             {
                 if (!String.IsNullOrEmpty(passwords[i]))
-                    key.ItemsKey.Add(new ItemKey() { Password = passwords[i], MethodData = CESAR });
+                    key.ItemsKey.Add(new ItemKey(password:passwords[i]) { MethodData = CESAR });
             }
             if (passwords.Count != 0)
             {

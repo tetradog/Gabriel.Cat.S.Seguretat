@@ -2,12 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.2</TargetFramework>
+    <PackageProjectUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <Company>Gabriel.Cat.Developer</Company>
+    <Authors>Gabriel.Cat.Developer</Authors>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Optimize>false</Optimize>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Gabriel.Cat.S.Utilitats">
-      <HintPath>..\..\..\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats\bin\Release\netstandard1.2\Gabriel.Cat.S.Utilitats.dll</HintPath>
-    </Reference>
+    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.0.2" />
   </ItemGroup>
 
 </Project>

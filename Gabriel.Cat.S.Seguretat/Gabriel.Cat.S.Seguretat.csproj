@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.2</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageProjectUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat/blob/master/LICENSE.txt</PackageLicenseUrl>
@@ -9,7 +9,7 @@
     <Authors>Gabriel.Cat.Developer</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.0.1</Version>
+    <Version>1.0.1.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,7 +22,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.0.2" />
+    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.0.3.2" />
   </ItemGroup>
 
 </Project>

@@ -46,6 +46,32 @@ namespace Gabriel.Cat.S.Seguretat
 
         private delegate byte[] MetodoMultiKey(byte[] data, byte[] password, DataEncrypt dataEncrypt, PasswordEncrypt passwordEncrypt, LevelEncrypt level, Ordre order);
 
+        public static int LenghtEncrypt(int lenghtDecrypt, byte[] password, DataEncrypt dataEncrypt, PasswordEncrypt passwordEncrypt, LevelEncrypt level, Ordre order)
+        {
+            int lengthEncrypt;
+            password = password.EncryptNotReverse(passwordEncrypt);
+            switch (dataEncrypt)
+            {
+                case DataEncrypt.Cesar: lengthEncrypt = Cesar.LenghtEncrtypt(lenghtDecrypt, password, level, order); break;
+                case DataEncrypt.Perdut: lengthEncrypt = Perdut.LenghtEncrtypt(lenghtDecrypt, password, level, order); break;
+                case DataEncrypt.Disimulat: lengthEncrypt = Disimulat.LenghtEncrtypt(lenghtDecrypt, password, level, order); break;
+                default: throw new ArgumentOutOfRangeException();
+            }
+            return lengthEncrypt;
+        }
+        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password,DataEncrypt dataEncrypt,PasswordEncrypt passwordEncrypt, LevelEncrypt level, Ordre order)
+        {
+            int lengthDecrypt;
+            password = password.EncryptNotReverse(passwordEncrypt);
+            switch (dataEncrypt)
+            {
+                case DataEncrypt.Cesar: lengthDecrypt = Cesar.LenghtDecrypt(lenghtEncrypt, password, level, order);break;
+                case DataEncrypt.Perdut: lengthDecrypt = Perdut.LenghtDecrypt(lenghtEncrypt, password, level, order); break;
+                case DataEncrypt.Disimulat: lengthDecrypt = Disimulat.LenghtDecrypt(lenghtEncrypt, password, level, order); break;
+                default:throw new ArgumentOutOfRangeException();
+            }
+            return lengthDecrypt;
+        }
         public static byte[] EncryptNotReverse(this byte[] bytes, PasswordEncrypt passwordEncrypt = PasswordEncrypt.Md5)
         {
             if (bytes.Length != 0)

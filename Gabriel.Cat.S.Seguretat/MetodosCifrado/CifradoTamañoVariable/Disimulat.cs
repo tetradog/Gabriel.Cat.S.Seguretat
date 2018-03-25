@@ -8,19 +8,45 @@ namespace Gabriel.Cat.S.Seguretat
 {
     public static class Disimulat
     {
-        public static byte[] Encrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order)
-        {//por testear la ultima cosa :D
-            byte[] bytesDisimulats;
-            long longitudArray = bytes.Length;
-            int numBytesRandom;
-            long pos = 0;
-            //calculo la longitud final
-            for (long i = 0, f = longitudArray; i <= f; i++)
+        public static int LenghtEncrtypt(int lengthDecrypt,byte[] password, LevelEncrypt level,Ordre order)
+        {
+            int longitudArray = lengthDecrypt;
+            int pos = 0;
+            for (int i = 0, f = longitudArray; i <= f; i++)
             {
                 longitudArray += EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);
                 pos += 2;
             }
-            bytesDisimulats = new byte[longitudArray];
+            return longitudArray;
+        }
+        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            int longitudAux = lenghtEncrypt;
+            int longitud = 0;
+            int pos = 0;
+            //calculo la longitud original
+            while (longitudAux > 0)
+            {
+                //le resto los caracteres random
+                longitudAux -= EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);
+                //quito el caracter original
+                longitudAux--;
+                //lo cuento
+                longitud++;
+                pos += 2;
+            }
+            longitud--;
+            return longitud;
+        }
+        public static byte[] Encrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order)
+        {//por testear la ultima cosa :D
+            byte[] bytesDisimulats;
+            int pos;
+            int numBytesRandom;
+          
+            //calculo la longitud final
+           
+            bytesDisimulats = new byte[LenghtEncrtypt(bytes.Length,password,level,order)];
             pos = 0;
             unsafe
             {
@@ -58,22 +84,8 @@ namespace Gabriel.Cat.S.Seguretat
         public static byte[] Decrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order)
         {
             byte[] bytesTrobats;
-            long longitudAux = bytes.Length;
-            long longitud = 0;
-            long pos = 0;
-            //calculo la longitud original
-            while (longitudAux > 0)
-            {
-                //le resto los caracteres random
-                longitudAux -= EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);
-                //quito el caracter original
-                longitudAux--;
-                //lo cuento
-                longitud++;
-                pos += 2;
-            }
-            longitud--;
-            bytesTrobats = new byte[longitud];//el ultimo es random tambien para disimular el ultimo real
+            int pos = 0;
+            bytesTrobats = new byte[LenghtDecrypt(bytes.Length,password,level,order)];//el ultimo es random tambien para disimular el ultimo real
             pos = 0;
 
             unsafe
@@ -82,7 +94,7 @@ namespace Gabriel.Cat.S.Seguretat
                 bytesTrobats.UnsafeMethod((unsBytesTrobats) => bytes.UnsafeMethod(unsBytes => {
                     ptrBytesTrobats = unsBytesTrobats.PtrArray;
                     ptrBytes = unsBytes.PtrArray;
-                    for (long i = 0, f = longitud + 1; i < f; i++)
+                    for (int i = 0, f = bytesTrobats.Length + 1; i < f; i++)
                     {
                         //recorro la array de bytes y pongo los bytes nuevos que tocan
                         ptrBytes += EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);

@@ -8,6 +8,14 @@ namespace Gabriel.Cat.S.Seguretat
 {
    public static class Cesar
     {
+        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return lengthDecrypt;
+        }
+        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return lenghtEncrypt;
+        }
         public static byte[] Encrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order)
         {
             byte[] bytesEncryptats = new byte[bytes.Length];

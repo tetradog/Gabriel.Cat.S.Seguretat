@@ -8,7 +8,15 @@ namespace Gabriel.Cat.S.Seguretat
 {
     public static class Perdut
     {
-        public static byte[] ComunEncryptDecrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order, bool toEncrypt)
+        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return lengthDecrypt;
+        }
+        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return lenghtEncrypt;
+        }
+            public static byte[] ComunEncryptDecrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order, bool toEncrypt)
         {
             bytes = bytes.SubArray(0,bytes.Length);//optimizar...si se puede claro 
 
@@ -27,7 +35,7 @@ namespace Gabriel.Cat.S.Seguretat
             return bytes;
         }
 
-
+       
 
          static unsafe void TractaPerdut(UnsafeArray ptrBytes, byte[] password, LevelEncrypt level, Ordre order, bool leftToRight)
         {//va bien :D

@@ -50,13 +50,16 @@ namespace Gabriel.Cat.S.Seguretat
         public class ItemEncryptationData
         {
             public delegate byte[] MethodEncryptReversible(byte[] data, string password, bool encrypt = true);
-
+            public delegate int MethodGetLenght(int lenght);
 
             public MethodEncryptReversible MethodData { get; set; }
-
-            public ItemEncryptationData(MethodEncryptReversible methodData)
+            public MethodGetLenght MethodLenghtEncrypted { get; set; }
+            public MethodGetLenght MethodLenghtDecrypted { get; set; }
+            public ItemEncryptationData(MethodEncryptReversible methodData,MethodGetLenght methodGetLenghtEncrypted,MethodGetLenght methodGetLenghtDecrypted)
             {
                 MethodData = methodData;
+                MethodLenghtDecrypted = methodGetLenghtDecrypted;
+                MethodLenghtEncrypted = methodGetLenghtEncrypted;
 
             }
             public byte[] Encrypt(byte[] data, string key)
@@ -157,7 +160,25 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return Serializar.ToString(Decrypt(Serializar.GetBytes(data)));
         }
-      
+        public int LengthEncrypt(int lengthDecrypt)
+        {
+            int lenghtEncrypt;
+            lenghtEncrypt = itemsEncryptData[itemsKey[0].MethodData].MethodLenghtEncrypted(lengthDecrypt);
+            for (int i = 1; i < itemsKey.Count; i++) {
+                lenghtEncrypt += itemsEncryptData[itemsKey[i].MethodData].MethodLenghtEncrypted(lenghtEncrypt);
+            }
+            return lenghtEncrypt;
+        }
+        public int LengthDecrypt(int lengthEncrypt)
+        {
+            int lengthDecrypt;
+            lengthDecrypt = itemsEncryptData[itemsKey[0].MethodData].MethodLenghtDecrypted(lengthEncrypt);
+            for (int i = 1; i < itemsKey.Count; i++)
+            {
+                lengthDecrypt -= itemsEncryptData[itemsKey[i].MethodData].MethodLenghtDecrypted(lengthDecrypt);
+            }
+            return lengthDecrypt;
+        }
         public static Key GetKey(long numeroDeRandomPasswords)
         {
             string[] randomPasswords = new string[numeroDeRandomPasswords];
@@ -180,8 +201,8 @@ namespace Gabriel.Cat.S.Seguretat
 
 
             Key key = new Key();
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar));
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut));
+            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar,GetLenghtMetodosCifradoLongitudInvariable,GetLenghtMetodosCifradoLongitudInvariable));
+            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable));
             key.ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash));
             for (int i = 0; i < passwords.Count; i++)
             {
@@ -194,6 +215,11 @@ namespace Gabriel.Cat.S.Seguretat
                 key.ItemsKey[key.ItemsKey.Count - 1].MethodData = PERDUT;
             }
             return key;
+        }
+
+        private static int GetLenghtMetodosCifradoLongitudInvariable(int lenght)
+        {
+            return lenght;
         }
 
         private static byte[] MetodoPerdut(byte[] data, string password, bool encrypt)

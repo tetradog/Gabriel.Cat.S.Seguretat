@@ -12,11 +12,22 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return lengthDecrypt;
         }
+
+        public static byte[] Decrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre ordre)
+        {
+            return ComunEncryptDecrypt(bytes, password, level, ordre, false);
+        }
+
+        public static byte[] Encrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre ordre)
+        {
+            return ComunEncryptDecrypt(bytes, password, level, ordre, true);
+        }
+
         public static int LenghtDecrypt(int lenghtEncrypt, byte[] password, LevelEncrypt level, Ordre order)
         {
             return lenghtEncrypt;
         }
-            public static byte[] ComunEncryptDecrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order, bool toEncrypt)
+         static byte[] ComunEncryptDecrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order, bool toEncrypt)
         {
             bytes = bytes.SubArray(0,bytes.Length);//optimizar...si se puede claro 
 

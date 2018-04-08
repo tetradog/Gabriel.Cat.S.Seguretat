@@ -120,7 +120,7 @@ namespace Gabriel.Cat.S.Seguretat
                     bytesEncrypted = Disimulat.Encrypt(bytes, password, level, order);
                     break;
                 case DataEncrypt.Perdut:
-                    bytesEncrypted = Perdut.ComunEncryptDecrypt(bytes, password, level, order, true);
+                    bytesEncrypted = Perdut.Encrypt(bytes, password, level, order);
                     break;
                 default: throw new ArgumentOutOfRangeException("dataEncrypt");
             }
@@ -162,7 +162,7 @@ namespace Gabriel.Cat.S.Seguretat
                     bytesDecrypted = Disimulat.Decrypt(bytes, password, level, order);
                     break;
                 case DataEncrypt.Perdut:
-                    bytesDecrypted = Perdut.ComunEncryptDecrypt(bytes, password, level, order, false);
+                    bytesDecrypted = Perdut.Decrypt(bytes, password, level, order);
                     break;
                 default: throw new ArgumentOutOfRangeException("dataDecrypt");
             }

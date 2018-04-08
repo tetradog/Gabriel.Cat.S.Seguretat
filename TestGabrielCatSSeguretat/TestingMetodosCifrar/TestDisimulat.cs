@@ -16,8 +16,14 @@ namespace TestGabrielCatSSeguretat.TestingMetodosCifrar
         [TestMethod]
         public void TestDisimulatEncryptDecryptString()
         {
+            bool correcto;
+            int posInicial = 0;
+            do {
+                correcto = Test.TestMethodString((text, password, level, ordre) => StringEncrypt.Encrypt(text, password, DataEncrypt.Disimulat, level, PasswordEncrypt.Nothing, ordre), (text, password, level, ordre) => StringEncrypt.Decrypt(text, password, DataEncrypt.Disimulat, level, PasswordEncrypt.Nothing, ordre), byte.MaxValue + 1,posInicial);
+                posInicial += byte.MaxValue;
+            } while (correcto&&posInicial<char.MaxValue);
             //requiere mucha memoria...lo ideal seria probarlo char.Length+1...pero creo que se dispara mucho la memoria...
-            Assert.IsTrue(Test.TestMethodString((text, password, level, ordre) => StringEncrypt.Encrypt(text, password, DataEncrypt.Disimulat, level, PasswordEncrypt.Nothing, ordre), (text, password, level, ordre) => StringEncrypt.Decrypt(text, password, DataEncrypt.Disimulat, level, PasswordEncrypt.Nothing, ordre),byte.MaxValue+1));
+            Assert.IsTrue(correcto);
         }
     }
 }

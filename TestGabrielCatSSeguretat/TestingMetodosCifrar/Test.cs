@@ -23,9 +23,9 @@ namespace TestGabrielCatSSeguretat
         {
             return TestMethod<byte>((objs, password, level, ordre) => methodEncrypt((byte[])objs, password, level, ordre), (objs, password, level, ordre) => methodDecrypt((byte[])objs, password, level, ordre), byte.MaxValue + 1, (i) => (byte)i);
         }
-        public static bool TestMethodString(MethodString methodEncrypt, MethodString methodDecrypt)
+        public static bool TestMethodString(MethodString methodEncrypt, MethodString methodDecrypt,int length= char.MaxValue + 1)
         {
-            return TestMethod<char>((objs, password, level, ordre) => methodEncrypt(new string((char[])objs), password, level, ordre).ToCharArray(), (objs, password, level, ordre) => methodDecrypt(new string((char[])objs), password, level, ordre).ToCharArray(), char.MaxValue + 1, (i) => (char)i);
+            return TestMethod<char>((objs, password, level, ordre) => methodEncrypt(new string((char[])objs), password, level, ordre).ToCharArray(), (objs, password, level, ordre) => methodDecrypt(new string((char[])objs), password, level, ordre).ToCharArray(), length, (i) => (char)i);
         }
         static bool TestMethod<T>(Method<T> methodEncrypt, Method<T> methodDecrypt,int length,Conversion<T> conversion)
         {

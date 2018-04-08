@@ -12,9 +12,10 @@ namespace Gabriel.Cat.S.Seguretat
         {
             int longitudArray = lengthDecrypt;
             int pos = 0;
-            for (int i = 0, f = longitudArray; i <= f; i++)
+            for (int i = 0, f = lengthDecrypt; i <= f; i++)
             {
                 longitudArray += EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);
+         
                 pos += 2;
             }
             return longitudArray;

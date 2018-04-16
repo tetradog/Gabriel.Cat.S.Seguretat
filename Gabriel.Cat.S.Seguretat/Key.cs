@@ -88,41 +88,49 @@ namespace Gabriel.Cat.S.Seguretat
         }
       
 
-        List<ItemEncryptationData> itemsEncryptData;
-        List<ItemEncryptationPassword> itemsEncryptPassword;
-        List<ItemKey> itemsKey;
-        public Key()
+        Llista<ItemEncryptationData> itemsEncryptData;
+        Llista<ItemEncryptationPassword> itemsEncryptPassword;
+        Llista<ItemKey> itemsKey;
+        IdUnico id;
+        public Key(IdUnico id=null)
         {
-            itemsKey = new List<ItemKey>();
-            itemsEncryptData = new List<ItemEncryptationData>();
-            itemsEncryptPassword = new List<ItemEncryptationPassword>();
+            if (id == null)
+                id = new IdUnico();
+
+            this.Id = id;
+            itemsKey = new Llista<ItemKey>();
+            itemsEncryptData = new Llista<ItemEncryptationData>();
+            itemsEncryptPassword = new Llista<ItemEncryptationPassword>();
         }
-        public Key(IEnumerable<ItemKey> itemsKey)
-            : this()
+        public Key(IList<ItemKey> itemsKey, IdUnico id=null)
+            : this(id)
         {
             ItemsKey.AddRange(itemsKey);
         }
     
 
-        public List<ItemKey> ItemsKey
+        public Llista<ItemKey> ItemsKey
         {
             get { return itemsKey; }
         }
 
-        public List<ItemEncryptationData> ItemsEncryptData
+        public Llista<ItemEncryptationData> ItemsEncryptData
         {
             get
             {
                 return itemsEncryptData;
             }
         }
-        public List<ItemEncryptationPassword> ItemsEncryptPassword
+        public Llista<ItemEncryptationPassword> ItemsEncryptPassword
         {
             get
             {
                 return itemsEncryptPassword;
             }
         }
+
+        public IdUnico Id { get => id; private set => id = value; }
+
         public byte[] Encrypt(byte[] data)
         {
             ItemEncryptationData itemEncryptData;

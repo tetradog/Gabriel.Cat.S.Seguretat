@@ -8,10 +8,10 @@ using System.Xml.Linq;
 
 namespace Gabriel.Cat.S.Seguretat
 {
-    public class Key
+    public class Key:IClonable<Key>
     {
      
-        public class ItemKey
+        public class ItemKey:IClonable<ItemKey>
         {
 
 
@@ -45,9 +45,12 @@ namespace Gabriel.Cat.S.Seguretat
                 Password = str.ToString();
             }
 
-
+            public ItemKey Clon()
+            {
+                return new ItemKey(MethodData, MethodPassword, Password);
+            }
         }
-        public class ItemEncryptationData
+        public class ItemEncryptationData:IClonable<ItemEncryptationData>
         {
             public delegate byte[] MethodEncryptReversible(byte[] data, string password, bool encrypt = true);
             public delegate int MethodGetLenght(int lenght);
@@ -70,8 +73,13 @@ namespace Gabriel.Cat.S.Seguretat
             {
                 return MethodData(data, key, false);
             }
+
+            public ItemEncryptationData Clon()
+            {
+                return new ItemEncryptationData(MethodData, MethodLenghtEncrypted, MethodLenghtDecrypted);
+            }
         }
-        public class ItemEncryptationPassword
+        public class ItemEncryptationPassword:IClonable<ItemEncryptationPassword>
         {
             public delegate string MethodEncryptNonReversible(string password);
             public MethodEncryptNonReversible MethodPassword { get; set; }
@@ -84,6 +92,11 @@ namespace Gabriel.Cat.S.Seguretat
             public string Encrypt(string key)
             {
                 return MethodPassword(key);
+            }
+
+            public ItemEncryptationPassword Clon()
+            {
+                return new ItemEncryptationPassword(MethodPassword);
             }
         }
       
@@ -187,6 +200,19 @@ namespace Gabriel.Cat.S.Seguretat
             }
             return lengthDecrypt;
         }
+
+        public Key Clon()
+        {
+            Key key = new Key();
+            for (int i = 0; i < ItemsEncryptData.Count; i++)
+                key.ItemsEncryptData.Add(ItemsEncryptData[i].Clon());
+            for (int i = 0; i < ItemsEncryptPassword.Count; i++)
+                key.ItemsEncryptPassword.Add(ItemsEncryptPassword[i].Clon());
+            for (int i = 0; i < ItemsKey.Count; i++)
+                key.ItemsKey.Add(ItemsKey[i].Clon());
+            return key;
+
+        }
         public static Key GetKey(long numeroDeRandomPasswords)
         {
             string[] randomPasswords = new string[numeroDeRandomPasswords];
@@ -262,5 +288,7 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return password.EncryptNotReverse();
         }
+
+
     }
 }

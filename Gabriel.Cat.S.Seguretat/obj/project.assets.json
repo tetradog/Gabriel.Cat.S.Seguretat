@@ -33,7 +33,7 @@
           "lib/netstandard1.0/_._": {}
         }
       },
-      "NETStandard.Library/2.0.1": {
+      "NETStandard.Library/2.0.3": {
         "type": "package",
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0"
@@ -149,14 +149,14 @@
         "runtime.json"
       ]
     },
-    "NETStandard.Library/2.0.1": {
-      "sha512": "oA6nwv9MhEKYvLpjZ0ggSpb1g4CQViDVQjLUcDWg598jtvJbpfeP2reqwI1GLW2TbxC/Ml7xL6BBR1HmKPXlTg==",
+    "NETStandard.Library/2.0.3": {
+      "sha512": "st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "type": "package",
-      "path": "netstandard.library/2.0.1",
+      "path": "netstandard.library/2.0.3",
       "files": [
+        ".nupkg.metadata",
         "LICENSE.TXT",
         "THIRD-PARTY-NOTICES.TXT",
-        "build/NETStandard.Library.targets",
         "build/netstandard2.0/NETStandard.Library.targets",
         "build/netstandard2.0/ref/Microsoft.Win32.Primitives.dll",
         "build/netstandard2.0/ref/System.AppContext.dll",
@@ -273,7 +273,7 @@
         "build/netstandard2.0/ref/netstandard.dll",
         "build/netstandard2.0/ref/netstandard.xml",
         "lib/netstandard1.0/_._",
-        "netstandard.library.2.0.1.nupkg.sha512",
+        "netstandard.library.2.0.3.nupkg.sha512",
         "netstandard.library.nuspec"
       ]
     },
@@ -312,39 +312,38 @@
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
       "Gabriel.Cat.S.Utilitats >= 1.0.4.3-preview1.0.1",
-      "NETStandard.Library >= 2.0.1"
+      "NETStandard.Library >= 2.0.3"
     ]
   },
   "packageFolders": {
     "C:\\Users\\tetra\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\": {},
+    "C:\\ProgramData\\Xamarin\\NuGet\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.2.2-Preview1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tetra\\Programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
+      "projectUniqueName": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "projectName": "Gabriel.Cat.S.Seguretat",
-      "projectPath": "C:\\Users\\tetra\\Programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
+      "projectPath": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "packagesPath": "C:\\Users\\tetra\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tetra\\Programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\obj\\",
+      "outputPath": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackagesFallback\\",
+        "C:\\ProgramData\\Xamarin\\NuGet\\",
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
         "C:\\Users\\tetra\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.Fallback.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "https://api.nuget.org/v3/index.json": {},
-        "https://www.myget.org/F/xamarinforms-ci/api/v2": {}
+        "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "netstandard2.0": {
@@ -367,7 +366,7 @@
           "NETStandard.Library": {
             "suppressParent": "All",
             "target": "Package",
-            "version": "[2.0.1, )",
+            "version": "[2.0.3, )",
             "autoReferenced": true
           }
         },

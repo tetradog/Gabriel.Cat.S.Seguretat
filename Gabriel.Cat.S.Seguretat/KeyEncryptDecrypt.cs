@@ -7,30 +7,64 @@ namespace Gabriel.Cat.S.Seguretat
     public class CrazyKey
     {
         public class CrazyItem{
-            //aqui digo lo que tiene que hacerle a KEY para hacer una de nueva
-            //coger los metodos y ponerlos en un array y perderlos para así encryptar de alguna manera los metodos
+            
+
             public CrazyItem()
             {
                 //Random
+                GenKey = 0;
+                MethodEncryptDataMethods = 0;
+                MethodEncryptPasswordMethods = 0;
             }
+            public byte GenKey
+            { get; set; }
+            public byte MethodEncryptDataMethods { get; set; }
+            public byte MethodEncryptPasswordMethods { get; set; }
             //public CrazyItem(args) para restaurarlo
-            public void Encrypt(Key keyToEncrypt)
+            public void Encrypt(SortedList<byte,Key> dicKeys,Key keyToEncrypt)
             {
+                const int GENINICIAL = byte.MinValue;
+
+                int[] dataMethods;
+                int[] passwordsMethods;
+ 
+                if (!dicKeys.ContainsKey(GenKey))
+                {
+                    for (byte genActual = 1,genAnterior=0; genActual < GenKey; genActual++,genAnterior++)
+                    {
+                        if (!dicKeys.ContainsKey(genActual))
+                            dicKeys.Add(genActual, dicKeys[genAnterior].Encrypt(dicKeys[GENINICIAL]));
+                    }
+                }
+
+                dataMethods = new int[keyToEncrypt.ItemsKey.Count];
+                passwordsMethods = new int[keyToEncrypt.ItemsKey.Count];
+              
+                for(int i=0;i<keyToEncrypt.ItemsKey.Count;i++)
+                {
+                    dataMethods[i] = keyToEncrypt.ItemsKey[i].MethodData;
+                    passwordsMethods[i] = keyToEncrypt.ItemsKey[i].MethodPassword;
+                }
+                //trato las arrays cifro
+
+                for (int i = 0; i < keyToEncrypt.ItemsKey.Count; i++)
+                {
+                    keyToEncrypt.ItemsKey[i].MethodData = dataMethods[i] ;
+                    keyToEncrypt.ItemsKey[i].MethodPassword = passwordsMethods[i];
+                    keyToEncrypt.ItemsKey[i].Password = dicKeys[GenKey].Encrypt(keyToEncrypt.ItemsKey[i].Password).Substring(0, keyToEncrypt.ItemsKey[i].Password.Length);
+                }
 
             }
-            public void Decrypt(Key ketToDecrypt)
-            {
 
-            }
         }
 
 
         public List<CrazyItem> CrazyItems { get; private set; }
 
-        public CrazyKey(int random):this()
+        public CrazyKey(int randomItems):this()
         {
            
-            RandomItems(random);
+            RandomItems(randomItems);
         }
         public CrazyKey()
         { CrazyItems = new List<CrazyItem>(); }
@@ -44,22 +78,23 @@ namespace Gabriel.Cat.S.Seguretat
             for (int i = 0; i < random; i++)
                 CrazyItems.Add(new CrazyItem());
         }
-
+        /// <summary>
+        /// Encrypta una Key de forma irreversible y obtiene otra como resultado
+        /// </summary>
+        /// <param name="keyToEncrypt"></param>
+        /// <returns></returns>
         public Key Encrypt(Key keyToEncrypt)
         {
             Key keyEncrypted = keyToEncrypt.Clon();
+            SortedList<byte, Key> dicKeys = new SortedList<byte, Key>();
+
+            dicKeys.Add(byte.MinValue, keyToEncrypt);
 
             for (int i = 0; i < CrazyItems.Count; i++)
-                CrazyItems[i].Encrypt(keyEncrypted);
+                CrazyItems[i].Encrypt(dicKeys,keyEncrypted);
+
             return keyEncrypted;
         }
-        public Key Decrypt(Key keyToDecrypt)
-        {
-            Key keyDecrypted = keyToDecrypt.Clon();
 
-            for (int i = CrazyItems.Count-1; i >=0 ; i--)
-                CrazyItems[i].Decrypt(keyDecrypted);
-            return keyDecrypted;
-        }
     }
 }

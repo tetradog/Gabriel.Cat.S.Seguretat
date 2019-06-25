@@ -50,18 +50,7 @@ namespace Gabriel.Cat.S.Seguretat
                 return new ItemKey(MethodData, MethodPassword, Password);
             }
         }
-        /// <summary>
-        /// Cifra de forma irreversible una clave
-        /// </summary>
-        /// <param name="keyToEncrypt"></param>
-        /// <returns></returns>
-        public Key Encrypt(Key keyToEncrypt)
-        {
-            Key keyEncrypted = keyToEncrypt.Clon();
-            for (int i = 0; i < keyToEncrypt.ItemsKey.Count; i++)
-                keyEncrypted.ItemsKey[i].Password = keyToEncrypt.Encrypt(keyEncrypted.ItemsKey[i].Password).Substring(0, keyEncrypted.ItemsKey[i].Password.Length);
-            return keyEncrypted;
-        }
+
 
         public class ItemEncryptationData : IClonable<ItemEncryptationData>
         {
@@ -115,20 +104,15 @@ namespace Gabriel.Cat.S.Seguretat
             }
         }
 
-
-        Llista<ItemEncryptationData> itemsEncryptData;
-        Llista<ItemEncryptationPassword> itemsEncryptPassword;
-        Llista<ItemKey> itemsKey;
-        IdUnico id;
         public Key(IdUnico id = null)
         {
             if (id == null)
                 id = new IdUnico();
 
-            this.Id = id;
-            itemsKey = new Llista<ItemKey>();
-            itemsEncryptData = new Llista<ItemEncryptationData>();
-            itemsEncryptPassword = new Llista<ItemEncryptationPassword>();
+            Id = id;
+            ItemsKey = new Llista<ItemKey>();
+            ItemsEncryptData = new Llista<ItemEncryptationData>();
+            ItemsEncryptPassword = new Llista<ItemEncryptationPassword>();
         }
         public Key(IList<ItemKey> itemsKey, IdUnico id = null)
             : this(id)
@@ -137,39 +121,24 @@ namespace Gabriel.Cat.S.Seguretat
         }
 
 
-        public Llista<ItemKey> ItemsKey
-        {
-            get { return itemsKey; }
-        }
+        public Llista<ItemKey> ItemsKey { get; private set; }
 
-        public Llista<ItemEncryptationData> ItemsEncryptData
-        {
-            get
-            {
-                return itemsEncryptData;
-            }
-        }
-        public Llista<ItemEncryptationPassword> ItemsEncryptPassword
-        {
-            get
-            {
-                return itemsEncryptPassword;
-            }
-        }
+        public Llista<ItemEncryptationData> ItemsEncryptData { get; private set; }
+        public Llista<ItemEncryptationPassword> ItemsEncryptPassword { get; private set; }
 
-        public IdUnico Id { get => id; private set => id = value; }
+        public IdUnico Id { get; private set; }
 
         public byte[] Encrypt(byte[] data)
         {
             ItemEncryptationData itemEncryptData;
             ItemEncryptationPassword itemEncryptPassword = null;
-            for (int i = 0, f = itemsKey.Count; i < f; i++)
+            for (int i = 0, f = ItemsKey.Count; i < f; i++)
             {
-                itemEncryptData = itemsEncryptData[itemsKey[i].MethodData];
-                if (itemsEncryptPassword.Count > 0)
-                    itemEncryptPassword = itemsEncryptPassword[itemsKey[i].MethodPassword];
+                itemEncryptData = ItemsEncryptData[ItemsKey[i].MethodData];
+                if (ItemsEncryptPassword.Count > 0)
+                    itemEncryptPassword = ItemsEncryptPassword[ItemsKey[i].MethodPassword];
 
-                data = itemEncryptData.Encrypt(data, itemEncryptPassword.Encrypt(itemsKey[i].Password) ?? itemsKey[i].Password);
+                data = itemEncryptData.Encrypt(data, itemEncryptPassword.Encrypt(ItemsKey[i].Password) ?? ItemsKey[i].Password);
             }
             return data;
         }
@@ -177,18 +146,30 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return Serializar.ToString(Encrypt(Serializar.GetBytes(data)));
         }
+        /// <summary>
+        /// Cifra de forma irreversible una clave
+        /// </summary>
+        /// <param name="keyToEncrypt"></param>
+        /// <returns></returns>
+        public Key Encrypt(Key keyToEncrypt, bool siempreGenerarLaMisma = false)
+        {
+            Key keyEncrypted = keyToEncrypt.Clon(siempreGenerarLaMisma);
+            for (int i = 0; i < keyToEncrypt.ItemsKey.Count; i++)
+                keyEncrypted.ItemsKey[i].Password = keyToEncrypt.Encrypt(keyEncrypted.ItemsKey[i].Password).Substring(0, keyEncrypted.ItemsKey[i].Password.Length);
+            return keyEncrypted;
+        }
         public byte[] Decrypt(byte[] data)
         {
             ItemEncryptationData itemEncryptData;
             ItemEncryptationPassword itemEncryptPassword = null;
-            for (int i = itemsKey.Count - 1; i >= 0; i--)
+            for (int i = ItemsKey.Count - 1; i >= 0; i--)
             {
 
-                itemEncryptData = itemsEncryptData[itemsKey[i].MethodData];
-                if (itemsEncryptPassword.Count > 0)
-                    itemEncryptPassword = itemsEncryptPassword[itemsKey[i].MethodPassword];
+                itemEncryptData = ItemsEncryptData[ItemsKey[i].MethodData];
+                if (ItemsEncryptPassword.Count > 0)
+                    itemEncryptPassword = ItemsEncryptPassword[ItemsKey[i].MethodPassword];
 
-                data = itemEncryptData.Decrypt(data, itemEncryptPassword.Encrypt(itemsKey[i].Password) ?? itemsKey[i].Password);
+                data = itemEncryptData.Decrypt(data, itemEncryptPassword.Encrypt(ItemsKey[i].Password) ?? ItemsKey[i].Password);
             }
             return data;
         }
@@ -199,20 +180,20 @@ namespace Gabriel.Cat.S.Seguretat
         public int LengthEncrypt(int lengthDecrypt)
         {
             int lenghtEncrypt;
-            lenghtEncrypt = itemsEncryptData[itemsKey[0].MethodData].MethodLenghtEncrypted(lengthDecrypt);
-            for (int i = 1; i < itemsKey.Count; i++)
+            lenghtEncrypt = ItemsEncryptData[ItemsKey[0].MethodData].MethodLenghtEncrypted(lengthDecrypt);
+            for (int i = 1; i < ItemsKey.Count; i++)
             {
-                lenghtEncrypt += itemsEncryptData[itemsKey[i].MethodData].MethodLenghtEncrypted(lenghtEncrypt);
+                lenghtEncrypt += ItemsEncryptData[ItemsKey[i].MethodData].MethodLenghtEncrypted(lenghtEncrypt);
             }
             return lenghtEncrypt;
         }
         public int LengthDecrypt(int lengthEncrypt)
         {
             int lengthDecrypt;
-            lengthDecrypt = itemsEncryptData[itemsKey[0].MethodData].MethodLenghtDecrypted(lengthEncrypt);
-            for (int i = 1; i < itemsKey.Count; i++)
+            lengthDecrypt = ItemsEncryptData[ItemsKey[0].MethodData].MethodLenghtDecrypted(lengthEncrypt);
+            for (int i = 1; i < ItemsKey.Count; i++)
             {
-                lengthDecrypt -= itemsEncryptData[itemsKey[i].MethodData].MethodLenghtDecrypted(lengthDecrypt);
+                lengthDecrypt -= ItemsEncryptData[ItemsKey[i].MethodData].MethodLenghtDecrypted(lengthDecrypt);
             }
             return lengthDecrypt;
         }

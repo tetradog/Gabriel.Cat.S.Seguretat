@@ -71,12 +71,13 @@ namespace Gabriel.Cat.S.Seguretat
             public MethodEncryptReversible MethodData { get; set; }
             public MethodGetLenght MethodLenghtEncrypted { get; set; }
             public MethodGetLenght MethodLenghtDecrypted { get; set; }
-            public ItemEncryptationData(MethodEncryptReversible methodData, MethodGetLenght methodGetLenghtEncrypted, MethodGetLenght methodGetLenghtDecrypted)
+            public bool LengthVariable;
+            public ItemEncryptationData(MethodEncryptReversible methodData, MethodGetLenght methodGetLenghtEncrypted, MethodGetLenght methodGetLenghtDecrypted,bool lenghtVariable)
             {
                 MethodData = methodData;
                 MethodLenghtDecrypted = methodGetLenghtDecrypted;
                 MethodLenghtEncrypted = methodGetLenghtEncrypted;
-
+                LengthVariable = lenghtVariable;
             }
             public byte[] Encrypt(byte[] data, string key)
             {
@@ -89,17 +90,18 @@ namespace Gabriel.Cat.S.Seguretat
 
             public ItemEncryptationData Clon()
             {
-                return new ItemEncryptationData(MethodData, MethodLenghtEncrypted, MethodLenghtDecrypted);
+                return new ItemEncryptationData(MethodData, MethodLenghtEncrypted, MethodLenghtDecrypted,LengthVariable);
             }
         }
         public class ItemEncryptationPassword : IClonable<ItemEncryptationPassword>
         {
             public delegate string MethodEncryptNonReversible(string password);
             public MethodEncryptNonReversible MethodPassword { get; set; }
-
-            public ItemEncryptationPassword(MethodEncryptNonReversible methodPassword)
+            public bool LengthVariable;
+            public ItemEncryptationPassword(MethodEncryptNonReversible methodPassword,bool lengthVariable)
             {
                 MethodPassword = methodPassword;
+                LengthVariable = lengthVariable;
 
             }
             public string Encrypt(string key)
@@ -109,7 +111,7 @@ namespace Gabriel.Cat.S.Seguretat
 
             public ItemEncryptationPassword Clon()
             {
-                return new ItemEncryptationPassword(MethodPassword);
+                return new ItemEncryptationPassword(MethodPassword,LengthVariable);
             }
         }
 
@@ -215,18 +217,33 @@ namespace Gabriel.Cat.S.Seguretat
             return lengthDecrypt;
         }
 
-        public Key Clon()
+        public Key Clon(bool deleteTamañoVariable)
         {
             Key key = new Key();
+            bool[] encryptData = new bool[ItemsEncryptData.Count];
+            bool[] encryptPassword = new bool[ItemsEncryptPassword.Count];
+
             for (int i = 0; i < ItemsEncryptData.Count; i++)
-                key.ItemsEncryptData.Add(ItemsEncryptData[i].Clon());
+            {
+                encryptData[i] = ItemsEncryptData[i].LengthVariable;
+                if (!deleteTamañoVariable || !encryptData[i])
+                     key.ItemsEncryptData.Add(ItemsEncryptData[i].Clon());
+            }
             for (int i = 0; i < ItemsEncryptPassword.Count; i++)
-                key.ItemsEncryptPassword.Add(ItemsEncryptPassword[i].Clon());
+            {
+                encryptPassword[i] = ItemsEncryptPassword[i].LengthVariable;
+                if (!deleteTamañoVariable||!encryptPassword[i])
+                    key.ItemsEncryptPassword.Add(ItemsEncryptPassword[i].Clon());
+            }
             for (int i = 0; i < ItemsKey.Count; i++)
-                key.ItemsKey.Add(ItemsKey[i].Clon());
+            {
+                if(!deleteTamañoVariable||!encryptData[ItemsKey[i].MethodData]&& !encryptPassword[ItemsKey[i].MethodPassword])
+                    key.ItemsKey.Add(ItemsKey[i].Clon());
+            }
             return key;
 
         }
+        public Key Clon() => Clon(false);
         public static Key GetKey(long numeroDeRandomPasswords)
         {
             string[] randomPasswords = new string[numeroDeRandomPasswords];
@@ -249,9 +266,9 @@ namespace Gabriel.Cat.S.Seguretat
 
 
             Key key = new Key();
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable));
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable));
-            key.ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash));
+            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable,false));
+            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable,false));
+            key.ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash,false));
             for (int i = 0; i < passwords.Count; i++)
             {
                 if (!String.IsNullOrEmpty(passwords[i]))

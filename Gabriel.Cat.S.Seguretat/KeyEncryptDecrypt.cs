@@ -12,7 +12,8 @@ namespace Gabriel.Cat.S.Seguretat
             {
                 Cesar,Perdut
             }
-            const int METODOSENCRYPTARRAY = 2;
+
+            static readonly int MetodosEncryptLength = Enum.GetNames(typeof(MetodoEncrypt)).Length;
             public CrazyItem()
             {
                 //Random
@@ -111,7 +112,7 @@ namespace Gabriel.Cat.S.Seguretat
                         for (long i = 0, pos = 0; i < array.Length; i++, pos++)
                         {
                             sumaCesar = EncryptDecrypt.CalculoNumeroCifrado(password, LevelEncrypt.Normal, Utilitats.Ordre.ConsecutiuIAlInreves, pos);
-                            *ptrBytesOri = (*ptrBytesOri + sumaCesar) % (METODOSENCRYPTARRAY + 1);
+                            *ptrBytesOri = (*ptrBytesOri + sumaCesar) % (MetodosEncryptLength + 1);
                             ptrBytesOri++;
                         }
 
@@ -122,7 +123,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
 
 
-        public List<CrazyItem> CrazyItems { get; private set; }
+       
 
         public CrazyKey(int randomItems) : this()
         {
@@ -131,6 +132,9 @@ namespace Gabriel.Cat.S.Seguretat
         }
         public CrazyKey()
         { CrazyItems = new List<CrazyItem>(); }
+
+        public List<CrazyItem> CrazyItems { get; private set; }
+
         public void RandomItems(int random)
         {
             if (random < 1)

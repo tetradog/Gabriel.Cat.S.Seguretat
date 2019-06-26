@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Gabriel.Cat.S.Seguretat
 {
-    public class Key : IClonable<Key>,IDisposable
+    public class Key : IClonable<Key>, IDisposable
     {
 
         public class ItemKey : IClonable<ItemKey>
@@ -53,7 +53,7 @@ namespace Gabriel.Cat.S.Seguretat
             }
             public bool Equals(ItemKey other)
             {
-                return other != null&&Password.Equals(other.Password)&&MethodData==other.MethodData&&MethodPassword==other.MethodPassword;
+                return other != null && Password.Equals(other.Password) && MethodData == other.MethodData && MethodPassword == other.MethodPassword;
             }
         }
 
@@ -67,7 +67,7 @@ namespace Gabriel.Cat.S.Seguretat
             public MethodGetLenght MethodLenghtEncrypted { get; set; }
             public MethodGetLenght MethodLenghtDecrypted { get; set; }
             public bool LengthVariable;
-            public ItemEncryptationData(MethodEncryptReversible methodData, MethodGetLenght methodGetLenghtEncrypted, MethodGetLenght methodGetLenghtDecrypted,bool lenghtVariable)
+            public ItemEncryptationData(MethodEncryptReversible methodData, MethodGetLenght methodGetLenghtEncrypted, MethodGetLenght methodGetLenghtDecrypted, bool lenghtVariable)
             {
                 MethodData = methodData;
                 MethodLenghtDecrypted = methodGetLenghtDecrypted;
@@ -85,7 +85,7 @@ namespace Gabriel.Cat.S.Seguretat
 
             public ItemEncryptationData Clon()
             {
-                return new ItemEncryptationData(MethodData, MethodLenghtEncrypted, MethodLenghtDecrypted,LengthVariable);
+                return new ItemEncryptationData(MethodData, MethodLenghtEncrypted, MethodLenghtDecrypted, LengthVariable);
             }
         }
         public class ItemEncryptationPassword : IClonable<ItemEncryptationPassword>
@@ -93,7 +93,7 @@ namespace Gabriel.Cat.S.Seguretat
             public delegate string MethodEncryptNonReversible(string password);
             public MethodEncryptNonReversible MethodPassword { get; set; }
             public bool LengthVariable;
-            public ItemEncryptationPassword(MethodEncryptNonReversible methodPassword,bool lengthVariable)
+            public ItemEncryptationPassword(MethodEncryptNonReversible methodPassword, bool lengthVariable)
             {
                 MethodPassword = methodPassword;
                 LengthVariable = lengthVariable;
@@ -106,7 +106,7 @@ namespace Gabriel.Cat.S.Seguretat
 
             public ItemEncryptationPassword Clon()
             {
-                return new ItemEncryptationPassword(MethodPassword,LengthVariable);
+                return new ItemEncryptationPassword(MethodPassword, LengthVariable);
             }
         }
         /// <summary>
@@ -128,7 +128,7 @@ namespace Gabriel.Cat.S.Seguretat
         {
             ItemsKey.AddRange(itemsKey);
         }
-         ~ Key()
+        ~Key()
         {
             Dispose();
             ItemsKey = null;
@@ -137,7 +137,7 @@ namespace Gabriel.Cat.S.Seguretat
             Id = null;
             if (DisposeKey != null)
                 DisposeKey(this, new EventArgs());
-           
+
         }
 
         public Llista<ItemKey> ItemsKey { get; private set; }
@@ -164,6 +164,55 @@ namespace Gabriel.Cat.S.Seguretat
         public string Encrypt(string data)
         {
             return Serializar.ToString(Encrypt(Serializar.GetBytes(data)));
+        }
+        public void Encrypt(FileInfo fileToEncrypt, string pathFileOut, int bufferLength = 100 * 1024)
+        {
+            BinaryReader brIn = null;
+            BinaryWriter bwOut = null;
+            FileStream fsOut = null;
+            FileStream fsIn = null;
+            byte[] buffer;
+
+            if (File.Exists(pathFileOut))
+                File.Delete(pathFileOut);
+            try
+            {
+                fsIn = fileToEncrypt.GetStream();
+                brIn = new BinaryReader(fsIn);
+                fsOut = new FileStream(pathFileOut, FileMode.Create);
+                bwOut = new BinaryWriter(fsOut);
+
+                do
+                {
+                    if(brIn.BaseStream.Position>bufferLength)
+                        buffer = brIn.ReadBytes(bufferLength);
+                    else
+                        buffer = brIn.ReadBytes((int)(brIn.BaseStream.Length- brIn.BaseStream.Position));
+
+                    bwOut.Write(buffer.Length);
+                    bwOut.Write(Encrypt(buffer));
+
+                } while (!brIn.BaseStream.EndOfStream());
+
+            }
+            catch { throw; }
+            finally
+            {
+                if (brIn != null)
+                    brIn.Close();
+                if (fsIn != null)
+                    fsIn.Close();
+                if (bwOut != null)
+                    bwOut.Close();
+                if (fsOut != null)
+                    fsOut.Close();
+            }
+        }
+        public FileInfo Encrypt(FileInfo fileToEncrypt, int bufferLength = 100 * 1024)
+        {
+            string pathFileEncrypted = System.IO.Path.Combine(fileToEncrypt.Directory.FullName, Path.GetFileNameWithoutExtension(fileToEncrypt.Name) + " encrypted_" + DateTime.Now.Ticks + "" + MiRandom.Next(int.MaxValue) + fileToEncrypt.Extension);
+            Encrypt(fileToEncrypt, pathFileEncrypted, bufferLength);
+            return new FileInfo(pathFileEncrypted);
         }
         /// <summary>
         /// Cifra de forma irreversible una clave
@@ -196,6 +245,50 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return Serializar.ToString(Decrypt(Serializar.GetBytes(data)));
         }
+
+        public void Decrypt(FileInfo fileToDecrypt, string pathFileOut)
+        {
+            BinaryReader brIn = null;
+            BinaryWriter bwOut = null;
+            FileStream fsOut = null;
+            FileStream fsIn = null;
+
+
+            if (File.Exists(pathFileOut))
+                File.Delete(pathFileOut);
+            try
+            {
+                fsIn = fileToDecrypt.GetStream();
+                brIn = new BinaryReader(fsIn);
+                fsOut = new FileStream(pathFileOut, FileMode.Create);
+                bwOut = new BinaryWriter(fsOut);
+
+                do
+                {
+                    bwOut.Write(Decrypt(brIn.ReadBytes(brIn.ReadInt32())));
+
+                } while (!brIn.BaseStream.EndOfStream());
+
+            }
+            catch { throw; }
+            finally
+            {
+                if (brIn != null)
+                    brIn.Close();
+                if (fsIn != null)
+                    fsIn.Close();
+                if (bwOut != null)
+                    bwOut.Close();
+                if (fsOut != null)
+                    fsOut.Close();
+            }
+        }
+        public FileInfo Decrypt(FileInfo fileToEncrypt)
+        {
+            string pathFileEncrypted = System.IO.Path.Combine(fileToEncrypt.Directory.FullName, Path.GetFileNameWithoutExtension(fileToEncrypt.Name) + " decrypted_" + DateTime.Now.Ticks + "" + MiRandom.Next(int.MaxValue) + fileToEncrypt.Extension);
+            Decrypt(fileToEncrypt, pathFileEncrypted);
+            return new FileInfo(pathFileEncrypted);
+        }
         public int LengthEncrypt(int lengthDecrypt)
         {
             int lenghtEncrypt;
@@ -227,17 +320,17 @@ namespace Gabriel.Cat.S.Seguretat
             {
                 encryptData[i] = ItemsEncryptData[i].LengthVariable;
                 if (!deleteTamañoVariable || !encryptData[i])
-                     key.ItemsEncryptData.Add(ItemsEncryptData[i].Clon());
+                    key.ItemsEncryptData.Add(ItemsEncryptData[i].Clon());
             }
             for (int i = 0; i < ItemsEncryptPassword.Count; i++)
             {
                 encryptPassword[i] = ItemsEncryptPassword[i].LengthVariable;
-                if (!deleteTamañoVariable||!encryptPassword[i])
+                if (!deleteTamañoVariable || !encryptPassword[i])
                     key.ItemsEncryptPassword.Add(ItemsEncryptPassword[i].Clon());
             }
             for (int i = 0; i < ItemsKey.Count; i++)
             {
-                if(!deleteTamañoVariable||!encryptData[ItemsKey[i].MethodData]&& !encryptPassword[ItemsKey[i].MethodPassword])
+                if (!deleteTamañoVariable || !encryptData[ItemsKey[i].MethodData] && !encryptPassword[ItemsKey[i].MethodPassword])
                     key.ItemsKey.Add(ItemsKey[i].Clon());
             }
             return key;
@@ -292,9 +385,9 @@ namespace Gabriel.Cat.S.Seguretat
 
 
             Key key = new Key();
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable,false));
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable,false));
-            key.ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash,false));
+            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
+            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
+            key.ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash, false));
             for (int i = 0; i < passwords.Count; i++)
             {
                 if (!String.IsNullOrEmpty(passwords[i]))

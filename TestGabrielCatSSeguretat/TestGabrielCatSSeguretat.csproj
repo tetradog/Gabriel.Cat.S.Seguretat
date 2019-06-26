@@ -39,6 +39,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Gabriel.Cat.S.Utilitats, Version=1.0.4.4, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Gabriel.Cat.S.Utilitats.1.0.4.4-preview1.0.5\lib\netstandard2.0\Gabriel.Cat.S.Utilitats.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.2.0\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
@@ -49,8 +52,8 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Drawing.Common.4.5.0-preview1-26216-02\lib\net461\System.Drawing.Common.dll</HintPath>
+    <Reference Include="System.Drawing.Common, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.4.6.0-preview.18571.3\lib\net461\System.Drawing.Common.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -65,10 +68,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats.csproj">
-      <Project>{a8c8a5ee-ebaa-4edb-95a9-9efb751ace3d}</Project>
-      <Name>Gabriel.Cat.S.Utilitats</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat.csproj">
       <Project>{266740e5-c443-4209-a2d8-a3acf2ce5d26}</Project>
       <Name>Gabriel.Cat.S.Seguretat</Name>

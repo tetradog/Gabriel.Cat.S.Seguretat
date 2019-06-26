@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gabriel.Cat.S.Seguretat", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGabrielCatSSeguretat", "TestGabrielCatSSeguretat\TestGabrielCatSSeguretat.csproj", "{EE2DD2F1-19BC-48CE-96E4-051D3BA1D573}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gabriel.Cat.S.Utilitats", "..\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats.csproj", "{A8C8A5EE-EBAA-4EDB-95A9-9EFB751ACE3D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{EE2DD2F1-19BC-48CE-96E4-051D3BA1D573}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE2DD2F1-19BC-48CE-96E4-051D3BA1D573}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE2DD2F1-19BC-48CE-96E4-051D3BA1D573}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A8C8A5EE-EBAA-4EDB-95A9-9EFB751ACE3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A8C8A5EE-EBAA-4EDB-95A9-9EFB751ACE3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A8C8A5EE-EBAA-4EDB-95A9-9EFB751ACE3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A8C8A5EE-EBAA-4EDB-95A9-9EFB751ACE3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,7 +9,8 @@
     <Authors>Gabriel.Cat.Developer</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.0.2.2-Preview1.0.1</Version>
+    <Version>1.0.2.2-Preview1.0.2</Version>
+    <PackageReleaseNotes>Añadido CrazyKey para poder enviar por la red una key sin problemas de seguridad (se necesita que ambos posean la key origen)</PackageReleaseNotes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -22,7 +23,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats.csproj" />
+    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.0.4.4-preview1.0.5" />
   </ItemGroup>
 
 </Project>

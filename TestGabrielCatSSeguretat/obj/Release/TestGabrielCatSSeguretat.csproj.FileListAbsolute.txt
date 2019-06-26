@@ -85,4 +85,3 @@ C:\Users\tetra\Documents\programas\Gabriel.Cat.S.Seguretat\TestGabrielCatSSegure
 C:\Users\tetra\Documents\programas\Gabriel.Cat.S.Seguretat\TestGabrielCatSSeguretat\obj\Release\TestGabrielCatSSeguretat.csproj.CopyComplete
 C:\Users\tetra\Documents\programas\Gabriel.Cat.S.Seguretat\TestGabrielCatSSeguretat\obj\Release\TestGabrielCatSSeguretat.dll
 C:\Users\tetra\Documents\programas\Gabriel.Cat.S.Seguretat\TestGabrielCatSSeguretat\obj\Release\TestGabrielCatSSeguretat.pdb
-C:\Users\tetra\Documents\programas\Gabriel.Cat.S.Seguretat\TestGabrielCatSSeguretat\bin\Release\Gabriel.Cat.S.Utilitats.pdb

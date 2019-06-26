@@ -8,7 +8,7 @@ using System.Xml.Linq;
 
 namespace Gabriel.Cat.S.Seguretat
 {
-    public class Key : IClonable<Key>
+    public class Key : IClonable<Key>,IDisposable
     {
 
         public class ItemKey : IClonable<ItemKey>
@@ -109,7 +109,10 @@ namespace Gabriel.Cat.S.Seguretat
                 return new ItemEncryptationPassword(MethodPassword,LengthVariable);
             }
         }
-
+        /// <summary>
+        /// Añadir el evento en todos los lugares donde haga referencia para así poder liberar memoria
+        /// </summary>
+        public event EventHandler DisposeKey;
         public Key(IdUnico id = null)
         {
             if (id == null)
@@ -125,7 +128,17 @@ namespace Gabriel.Cat.S.Seguretat
         {
             ItemsKey.AddRange(itemsKey);
         }
-
+         ~ Key()
+        {
+            Dispose();
+            ItemsKey = null;
+            ItemsEncryptData = null;
+            ItemsEncryptPassword = null;
+            Id = null;
+            if (DisposeKey != null)
+                DisposeKey(this, new EventArgs());
+           
+        }
 
         public Llista<ItemKey> ItemsKey { get; private set; }
 
@@ -243,6 +256,20 @@ namespace Gabriel.Cat.S.Seguretat
                 equals = ItemsKey[i].Equals(other.ItemsKey[i]);
             return equals;
         }
+
+        void IDisposable.Dispose()
+        {
+
+            Dispose();
+        }
+        void Dispose()
+        {
+            ItemsKey.Clear();
+            ItemsEncryptData.Clear();
+            ItemsEncryptPassword.Clear();
+        }
+
+
         public static Key GetKey(long numeroDeRandomPasswords)
         {
             string[] randomPasswords = new string[numeroDeRandomPasswords];

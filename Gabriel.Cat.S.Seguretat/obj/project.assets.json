@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     ".NETStandard,Version=v2.0": {
+      "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.0.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.CSharp": "4.5.0-rc1",
+          "System.Drawing.Common": "4.6.0-preview.18571.3"
+        },
+        "compile": {
+          "lib/netstandard2.0/Gabriel.Cat.S.Utilitats.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Gabriel.Cat.S.Utilitats.dll": {}
+        }
+      },
       "Microsoft.CSharp/4.5.0-rc1": {
         "type": "package",
         "compile": {
@@ -43,24 +56,22 @@
         "runtime": {
           "lib/netstandard2.0/System.Drawing.Common.dll": {}
         }
-      },
-      "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.0.5": {
-        "type": "project",
-        "framework": ".NETStandard,Version=v2.0",
-        "dependencies": {
-          "Microsoft.CSharp": "4.5.0-rc1",
-          "System.Drawing.Common": "4.6.0-preview.18571.3"
-        },
-        "compile": {
-          "bin/placeholder/Gabriel.Cat.S.Utilitats.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Gabriel.Cat.S.Utilitats.dll": {}
-        }
       }
     }
   },
   "libraries": {
+    "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.0.5": {
+      "sha512": "VxuQ9Jv4h0GOP5rGVlmV2Hn8J45Q6JepFyVG8cVQiRKLPd+wwNezqvF7f4UXhvDOHzgHrqtPSvhPyZzjg6lnCA==",
+      "type": "package",
+      "path": "gabriel.cat.s.utilitats/1.0.4.4-preview1.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "gabriel.cat.s.utilitats.1.0.4.4-preview1.0.5.nupkg.sha512",
+        "gabriel.cat.s.utilitats.nuspec",
+        "lib/netstandard2.0/Gabriel.Cat.S.Utilitats.dll"
+      ]
+    },
     "Microsoft.CSharp/4.5.0-rc1": {
       "sha512": "+TFL2i2HPDkba7xOnAiYNLHLso/rJatwiHbGETeCHVwlCCycElxJqbtIBv6S0PmWUJ/QNSher/St1hM6+RKiLg==",
       "type": "package",
@@ -306,11 +317,6 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
-    },
-    "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.0.5": {
-      "type": "project",
-      "path": "../../Gabriel.Cat.S.Utilitats/Gabriel.Cat.S.Utilitats/Gabriel.Cat.S.Utilitats.csproj",
-      "msbuildProject": "../../Gabriel.Cat.S.Utilitats/Gabriel.Cat.S.Utilitats/Gabriel.Cat.S.Utilitats.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -325,7 +331,7 @@
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
-    "version": "1.0.2.2-Preview1.0.1",
+    "version": "1.0.2.2-Preview1.0.2",
     "restore": {
       "projectUniqueName": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "projectName": "Gabriel.Cat.S.Seguretat",
@@ -351,11 +357,7 @@
       },
       "frameworks": {
         "netstandard2.0": {
-          "projectReferences": {
-            "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Utilitats\\Gabriel.Cat.S.Utilitats\\Gabriel.Cat.S.Utilitats.csproj": {
-              "projectPath": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Utilitats\\Gabriel.Cat.S.Utilitats\\Gabriel.Cat.S.Utilitats.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -367,6 +369,10 @@
     "frameworks": {
       "netstandard2.0": {
         "dependencies": {
+          "Gabriel.Cat.S.Utilitats": {
+            "target": "Package",
+            "version": "[1.0.4.4-preview1.0.5, )"
+          },
           "NETStandard.Library": {
             "suppressParent": "All",
             "target": "Package",

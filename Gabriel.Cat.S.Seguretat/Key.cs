@@ -14,10 +14,6 @@ namespace Gabriel.Cat.S.Seguretat
         public class ItemKey : IClonable<ItemKey>
         {
 
-
-            public int MethodData { get; set; }
-            public int MethodPassword { get; set; }
-            public string Password { get; set; }
             public ItemKey(int methodData = 0, int methodPassword = 0, bool randomKey = true, int lenghtRandomKey = 15)
             {
                 MethodData = methodData;
@@ -32,7 +28,9 @@ namespace Gabriel.Cat.S.Seguretat
                 if (password != null)
                     Password = password;
             }
-
+            public int MethodData { get; set; }
+            public int MethodPassword { get; set; }
+            public string Password { get; set; }
 
             public void GenerateRandomKey(int lenght = 15)
             {
@@ -48,6 +46,14 @@ namespace Gabriel.Cat.S.Seguretat
             public ItemKey Clon()
             {
                 return new ItemKey(MethodData, MethodPassword, Password);
+            }
+            public override bool Equals(object obj)
+            {
+                return Equals(obj as ItemKey);
+            }
+            public bool Equals(ItemKey other)
+            {
+                return other != null&&Password.Equals(other.Password)&&MethodData==other.MethodData&&MethodPassword==other.MethodPassword;
             }
         }
 
@@ -225,6 +231,18 @@ namespace Gabriel.Cat.S.Seguretat
 
         }
         public Key Clon() => Clon(false);
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as Key);
+        }
+        public bool Equals(Key other)
+        {
+            bool equals = other != null && ItemsKey.Count == other.ItemsKey.Count;
+            for (int i = 0; i < ItemsKey.Count && equals; i++)
+                equals = ItemsKey[i].Equals(other.ItemsKey[i]);
+            return equals;
+        }
         public static Key GetKey(long numeroDeRandomPasswords)
         {
             string[] randomPasswords = new string[numeroDeRandomPasswords];

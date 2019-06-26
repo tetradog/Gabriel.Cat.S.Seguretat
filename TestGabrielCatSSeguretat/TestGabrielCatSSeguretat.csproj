@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TestGabrielCatSSeguretat</RootNamespace>
     <AssemblyName>TestGabrielCatSSeguretat</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
@@ -39,9 +39,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gabriel.Cat.S.Utilitats, Version=1.0.4.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Gabriel.Cat.S.Utilitats.1.0.4.1\lib\netstandard2.0\Gabriel.Cat.S.Utilitats.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.2.0\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
@@ -62,11 +59,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestingMetodosCifrar\TestPerdut.cs" />
     <Compile Include="TestingMetodosCifrar\TestDisimulat.cs" />
+    <Compile Include="CrazyKeyTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats.csproj">
+      <Project>{a8c8a5ee-ebaa-4edb-95a9-9efb751ace3d}</Project>
+      <Name>Gabriel.Cat.S.Utilitats</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat.csproj">
       <Project>{266740e5-c443-4209-a2d8-a3acf2ce5d26}</Project>
       <Name>Gabriel.Cat.S.Seguretat</Name>

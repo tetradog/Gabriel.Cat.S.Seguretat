@@ -222,7 +222,7 @@ namespace Gabriel.Cat.S.Seguretat
         public Key Encrypt(Key keyToEncrypt, bool siempreGenerarLaMisma = false)
         {
             Key keyEncrypted = keyToEncrypt.Clon(siempreGenerarLaMisma);
-            for (int i = 0; i < keyToEncrypt.ItemsKey.Count; i++)
+            for (int i = 0; i < keyToEncrypt.ItemsKey.Count; i++)//si tiene algun disimulat puede variar las contraseñas es por eso que si se quiere generar la misma debe ser quitado en el clon :)
                 keyEncrypted.ItemsKey[i].Password = keyToEncrypt.Encrypt(keyEncrypted.ItemsKey[i].Password).Substring(0, keyEncrypted.ItemsKey[i].Password.Length);
             return keyEncrypted;
         }

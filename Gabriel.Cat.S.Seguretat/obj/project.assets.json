@@ -333,11 +333,11 @@
   "project": {
     "version": "1.0.2.2-Preview1.0.3",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
+      "projectUniqueName": "C:\\Users\\tetra\\source\\repos\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "projectName": "Gabriel.Cat.S.Seguretat",
-      "projectPath": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
+      "projectPath": "C:\\Users\\tetra\\source\\repos\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "packagesPath": "C:\\Users\\tetra\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tetra\\Documents\\programas\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\obj\\",
+      "outputPath": "C:\\Users\\tetra\\source\\repos\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -381,10 +381,16 @@
           }
         },
         "imports": [
-          "net461"
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
         ],
         "assetTargetFallback": true,
-        "warn": true
+        "warn": true,
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
       }
     }
   }

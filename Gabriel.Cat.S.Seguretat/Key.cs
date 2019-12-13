@@ -2,6 +2,7 @@
 using Gabriel.Cat.S.Utilitats;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Xml.Linq;
@@ -165,6 +166,15 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return Serializar.ToString(Encrypt(Serializar.GetBytes(data)));
         }
+        public IList<Bitmap> Encrypt(byte[] data,IList<Bitmap> outputBmps)
+        {
+            return outputBmps.SetData(Encrypt(data),LevelEncrypt.Normal);
+        }
+        public IList<Bitmap> Encrypt(string data, IList<Bitmap> outputBmps)
+        {
+            return outputBmps.SetData(Encrypt(Serializar.GetBytes(data)), LevelEncrypt.Normal);
+        }
+  
         public void Encrypt(FileInfo fileToEncrypt, string pathFileOut, int bufferLength = 100 * 1024)
         {
             BinaryReader brIn = null;
@@ -240,6 +250,10 @@ namespace Gabriel.Cat.S.Seguretat
                 data = itemEncryptData.Decrypt(data, itemEncryptPassword.Encrypt(ItemsKey[i].Password) ?? ItemsKey[i].Password);
             }
             return data;
+        }
+        public byte[] Decrypt(IList<Bitmap> outputBmps)
+        {
+            return Decrypt(outputBmps.GetData(LevelEncrypt.Normal));
         }
         public string Decrypt(string data)
         {

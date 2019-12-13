@@ -9,62 +9,29 @@ namespace Gabriel.Cat.S.Seguretat
 {
     public static class BitmapContainer
     {
-        public static IList<Bitmap> Encrypt(this IList<Bitmap> lstBmps, byte[] data, byte[] password, DataEncrypt dataEncrypt = DataEncrypt.Cesar, PasswordEncrypt passwordEncrypt = PasswordEncrypt.Nothing, LevelEncrypt level = LevelEncrypt.Normal, Ordre order = Ordre.Consecutiu)
+        public static IList<Bitmap> GetBitmaps(this IList<Bitmap> lstBmps, int length,LevelEncrypt level)
         {
-            
-            if (lstBmps.MaxLength(level) < EncryptDecrypt.LenghtEncrypt(data.Length, password, dataEncrypt, passwordEncrypt, level, order)+EncryptDecrypt.BytesChangeDefault.Length)
-                throw new InsufficientMemoryException();
+ 
 
             List<Bitmap> bmps = new List<Bitmap>();
             long pos = 0;
             int i = 0;
-            byte[] aux;
-
-            data = EncryptDecrypt.Encrypt(data, password, dataEncrypt, passwordEncrypt, level, order);
-            data = data.AddArray(EncryptDecrypt.BytesChangeDefault);//pongo marcaFin
-            while (pos < data.Length)
+            while (pos < length)
             {
                 bmps.Add(lstBmps[i].Clone(System.Drawing.Imaging.PixelFormat.Format32bppArgb));
                 pos += lstBmps[i++].MaxLength(level);
             }
-            unsafe
-            {
-                byte* ptrData;
-                byte* ptrAux;
-                fixed (byte* ptData = data)
-                {
-                    pos = 0;
-                    ptrData = ptData;
-                    for (int j = 0, f = bmps.Count - 1; j < f; j++)
-                    {
-                        pos += bmps[j].MaxLength(level);
-                        ptrData = bmps[j].SetData(ptrData, level);
-                    }
-                    //el ultimo no ocupará toda la imagen por eso lo pongo al final :)
-                    aux = new byte[bmps[bmps.Count - 1].MaxLength(level)];
-                    fixed (byte* ptAux = aux)
-                    {
-                        ptrAux = ptAux;
-
-                        for (int l = (int)pos; l < data.Length; l++)
-                        {
-                            *ptrAux = *ptrData;
-                            ptrAux++;
-                            ptrData++;
-                        }
-                        ptrData = ptAux;
-                        bmps[bmps.Count - 1].SetData(ptrData, level);
-                    }
-                }
-            }
-
-
             return bmps;
+        }
+        public static IList<Bitmap> Encrypt(this IList<Bitmap> lstBmps, byte[] data, byte[] password, DataEncrypt dataEncrypt = DataEncrypt.Cesar, PasswordEncrypt passwordEncrypt = PasswordEncrypt.Nothing, LevelEncrypt level = LevelEncrypt.Normal, Ordre order = Ordre.Consecutiu)
+        {
+
+            data = EncryptDecrypt.Encrypt(data, password, dataEncrypt, passwordEncrypt, level, order);
+            return lstBmps.SetData(data,level);
         }
         public static byte[] Decrypt(this IList<Bitmap> lstBmps,byte[] password, DataEncrypt dataEncrypt = DataEncrypt.Cesar, PasswordEncrypt passwordEncrypt = PasswordEncrypt.Nothing, LevelEncrypt level = LevelEncrypt.Normal, Ordre order = Ordre.Consecutiu)
         {
             byte[] data = lstBmps.GetData(level);
-            data = data.SubArray(data.SearchArray(EncryptDecrypt.BytesChangeDefault));//quito la marca fin
             return EncryptDecrypt.Decrypt(data, password, dataEncrypt, passwordEncrypt, level, order);
            
         }
@@ -93,6 +60,7 @@ namespace Gabriel.Cat.S.Seguretat
                     }
                 }
             }
+            data = data.SubArray(data.SearchArray(EncryptDecrypt.BytesChangeDefault));//quito la marca fin
             return data;
         }
         public unsafe static byte* GetData(this Bitmap bmp,LevelEncrypt level)
@@ -113,6 +81,27 @@ namespace Gabriel.Cat.S.Seguretat
                 }
             }
             return ptrDataOri;
+        }
+        public static IList<Bitmap> SetData(this IList<Bitmap> bmpsToSetData, byte[] data,LevelEncrypt level)
+        {
+            if (bmpsToSetData.MaxLength(level) < data.Length+EncryptDecrypt.BytesChangeDefault.Length)
+                throw new InsufficientMemoryException();
+            IList<Bitmap> bmps = bmpsToSetData.GetBitmaps(data.Length + EncryptDecrypt.BytesChangeDefault.Length, level);
+
+            unsafe
+            {
+                byte* ptrData;
+                fixed(byte* ptData = data.AddArray(EncryptDecrypt.BytesChangeDefault,new byte[bmpsToSetData.MaxLength(level)-data.Length-EncryptDecrypt.BytesChangeDefault.Length]))//añado marca fin
+                {
+                    ptrData = ptData;
+                    for (int i = 0; i < bmps.Count; i++)
+                       ptrData= bmps[i].SetData(ptrData, level);
+                }
+            }
+
+
+
+            return bmps;
         }
         public unsafe static byte* SetData(this Bitmap bmp, byte* data, LevelEncrypt level)
         {

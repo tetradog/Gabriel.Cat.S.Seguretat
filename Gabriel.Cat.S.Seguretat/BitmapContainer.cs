@@ -115,6 +115,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
         public static long MaxLength(this IList<Bitmap> lstBmps, LevelEncrypt level)
         {
+            
             long max = 0;
             for (int i = 0; i < lstBmps.Count; i++)
                 max += lstBmps[i].MaxLength(level);
@@ -122,8 +123,9 @@ namespace Gabriel.Cat.S.Seguretat
         }
         public static long MaxLength(this Bitmap bmp, LevelEncrypt level)
         {
+            const int BITSBYTE=8;
             const int ARGB = 4;
-            return (bmp.Height * bmp.Width * ARGB) / (((int)level) + 1);
+            return (bmp.Height * bmp.Width * ARGB) / ((((int)level) + 1)*BITSBYTE);
         }
     }
 }

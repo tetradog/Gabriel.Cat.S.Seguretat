@@ -2,7 +2,7 @@ namespace Gabriel.Cat.S.Seguretat{
 
 public static class OldLost{
 
-public static byte[] Encrypt(byte[] data,byte[] password){
+public static byte[] Encrypt(byte[] data,byte[] password, LevelEncrypt level, Ordre order){//level y orden de posicionesPassword
 byte[] dataEncrypted=new byte[data.Length+EncryptDecrypt.BytesChangeDefault.Length+(password.Length-((data.Length+EncryptDecrypt.BytesChangeDefault.Length)/password.Length))];
 int[] posiciones=GetPosPassword(password);
 int longitudColumna=dataEncrypted.Length/posiciones.Length;    
@@ -71,7 +71,7 @@ byte* aux;
     }
 return dataEncrypted;
 }
-public static byte[] Decrypt(byte[] data,byte[] password){
+public static byte[] Decrypt(byte[] data,byte[] password, LevelEncrypt level, Ordre order){//level y orden de posicionesPassword
 
     byte[] decrypted=new byte[data.Length];
     int[] posicionesPassword=GetPosPassword(password);

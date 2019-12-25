@@ -4,12 +4,35 @@ public static class OldLost{
 
 public static byte[] Encrypt(byte[] data,byte[] password){
 byte[] dataEncrypted=new byte[data.Length+EncryptDecrypt.BytesChangeDefault.Length+(password.Length-((data.Length+EncryptDecrypt.BytesChangeDefault.Length)/password.Length))];
+int[] posiciones=GetPosPassword(password);
+long pos=0;
+unsafe{
+byte* ptrData;
+byte* ptrEncrypted;    
+fixed(byte* ptData=data)    
+{
+    ptrData=ptData;
+    fixed(byte* ptEncrypted=dataEncrypted){
+    
+        ptrEncrypted=ptEncrypted;
+        for(int i=0;i<data.Length;i++){
+        
+        }
+        for(int i=0;i<EncryptDecrypt.BytesChangeDefault.Length;i++)
+        {
+            
+        }
+        for(int i=0,f=dataEncrypted.Length-(data.Length+EncryptDecrypt.BytesChangeDefault.Length);i<f;i++)
+        {
+            
+        }
+    }
+
+}
 
 
 
-
-
-
+    }
 return dataEncrypted;
 }
 static int[] GetPosPassword(byte[] password){

@@ -5,8 +5,12 @@ public static class OldLost{
 public static byte[] Encrypt(byte[] data,byte[] password){
 byte[] dataEncrypted=new byte[data.Length+EncryptDecrypt.BytesChangeDefault.Length+(password.Length-((data.Length+EncryptDecrypt.BytesChangeDefault.Length)/password.Length))];
 int[] posiciones=GetPosPassword(password);
+int longitudColumna=dataEncrypted.Length/posiciones.Length;    
 long pos=0;
+byte[] aux=new byte[1];    
 unsafe{
+byte* ptrAux;
+byte* ptrMarcaFin;    
 byte* ptrData;
 byte* ptrEncrypted;    
 fixed(byte* ptData=data)    
@@ -15,20 +19,52 @@ fixed(byte* ptData=data)
     fixed(byte* ptEncrypted=dataEncrypted){
     
         ptrEncrypted=ptEncrypted;
-        for(int i=0;i<data.Length;i++){
-        
+         fixed(byte* ptAux=aux){
+    
+        ptrAux=ptAux;
+        fixed(byte* ptMarcaFin=EncryptDecrypt.BytesChangeDefault){
+    
+        ptrMarcaFin=ptMarcaFin;
+        for(int i=0;i<data.Length;i+=password.Length){
+        PonFila(ptrEncrypted,ptrData,longitudColumnas,posicionesContraseña,pos);
+            ptrEncrypted+=password.Length;
+            pos+=password.Length;
+            ptrData+=password.Length;
         }
-        for(int i=0;i<EncryptDecrypt.BytesChangeDefault.Length;i++)
+        for(int i=0;i<EncryptDecrypt.BytesChangeDefault.Length;i+=password.Length))
         {
-            
+            PonFila(ptrEncrypted,ptrMarcaFin,longitudColumnas,posicionesContraseña,pos);
+            ptrEncrypted+=password.Length;
+            pos+=password.Length;
+            ptrMarcaFin+=password.Length;
         }
         for(int i=0,f=dataEncrypted.Length-(data.Length+EncryptDecrypt.BytesChangeDefault.Length);i<f;i++)
         {
-            
+            *ptrAux=(byte)MiRandom.Next(byte.MaxValue);
+            PonFila(ptrEncrypted,ptrAux,longitudColumnas,posicionesContraseña,pos,1);
+            ptrEncrypted++;
+            pos++;
         }
     }
+         }}
 
 }
+static unsafe void PonFila(byte* ptrOut,byte* ptrIn,int longitudColumnas,int[] posicionesContraseña,long pos,int linea=-1){
+byte* aux;
+ if(linea==-1)
+     linea=posicionesContraseña.Length;
+    //pongo la fila
+    for(int i=0;i<linea;i++)
+    {
+        aux=ptrOut+posicionesContraseña[pos/longitudColumnas];
+        *aux=*ptrIn;
+        
+        pos++;
+        ptrIn++;
+        
+    }
+
+}    
 
 
 

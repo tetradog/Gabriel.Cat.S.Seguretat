@@ -12,8 +12,8 @@ public static class OldLost{
           unsafe{
           fixed(byte* ptDataEncrypted=dataEncrypted){
           byte*[] pointers=GetPointers(ptDataEncrypted,dataEncrypted.Length,password);
-            pointers.Seek((dataEncrypted.Length/password.Length)-1);
-            dataFin=pointers.ReadLine();
+            Gabriel.Cat.S.Utilitats.PointerUtils.Seek(pointers,(dataEncrypted.Length/password.Length)-1);
+            dataFin=Gabriel.Cat.S.Utilitats.PointerUtils.ReadLine(pointers);
           }
           }
           

@@ -1,133 +1,80 @@
 namespace Gabriel.Cat.S.Seguretat{
 
 public static class OldLost{
-
+  public static int LenghtEncrypted(byte[] dataDecrypted, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return dataDecrypted.Length+EncryptDecrypt.BytesChangeDefault.Length+(password.Length-((dataDecrypted.Length+EncryptDecrypt.BytesChangeDefault.Length)/password.Length));
+        }
+        public static int LenghtDecrypted(byte[] dataEncrypted, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return lenghtEncrypt;
+        }
 public static byte[] Encrypt(byte[] data,byte[] password, LevelEncrypt level, Ordre order){//level y orden de posicionesPassword
-byte[] dataEncrypted=new byte[data.Length+EncryptDecrypt.BytesChangeDefault.Length+(password.Length-((data.Length+EncryptDecrypt.BytesChangeDefault.Length)/password.Length))];
-int[] posiciones=GetPosPassword(password);
-int longitudColumna=dataEncrypted.Length/posiciones.Length;    
+byte[] dataEncrypted=new byte[LengthEncrypted(data,password,level,order)];
+
 int pos=0;
-byte[] aux=new byte[1];    
-unsafe{
-byte* ptrAux;
-byte* ptrMarcaFin;    
-byte* ptrData;
-byte* ptrEncrypted;    
-fixed(byte* ptData=data)    
-{
-    ptrData=ptData;
-    fixed(byte* ptEncrypted=dataEncrypted){
-    
-        ptrEncrypted=ptEncrypted;
-         fixed(byte* ptAux=aux){
-    
-        ptrAux=ptAux;
-        fixed(byte* ptMarcaFin=EncryptDecrypt.BytesChangeDefault){
-    
-        ptrMarcaFin=ptMarcaFin;
-        for(int i=0;i<data.Length;i+=password.Length){
-        PonFila(ptrEncrypted,ptrData,longitudColumnas,posicionesContraseña,pos);
-            ptrEncrypted+=password.Length;
-            pos+=password.Length;
-            ptrData+=password.Length;
-        }
-        for(int i=0;i<EncryptDecrypt.BytesChangeDefault.Length;i+=password.Length))
-        {
-            PonFila(ptrEncrypted,ptrMarcaFin,longitudColumnas,posicionesContraseña,pos);
-            ptrEncrypted+=password.Length;
-            pos+=password.Length;
-            ptrMarcaFin+=password.Length;
-        }
-        for(int i=0,f=dataEncrypted.Length-(data.Length+EncryptDecrypt.BytesChangeDefault.Length);i<f;i++)
-        {
-            *ptrAux=(byte)MiRandom.Next(byte.MaxValue);
-            PonFila(ptrEncrypted,ptrAux,longitudColumnas,posicionesContraseña,pos,1);
-            ptrEncrypted++;
-            pos++;
-        }
-    }
-         }}
+    int lengthFin=dataEncrypted.Length-data.Length;
+        unsafe{
+            fixed(byte*ptData=data){
+                fixed(byte*ptEncrypted=dataEncrypted){
+                     fixed(byte*ptFin=EncryptDecrypt.BytesChangeDefault.AddArray(MiRandom.NextBytes(dataEncrypted.Length-EncryptDecrypt.BytesChangeDefault.Length))){
+                    byte* ptrEncrypted=ptEncrypted;
+            byte*[] dataPointers=GetPointers(ptData,data.Length;password);
+                for(int i=0;i<data.Length;i++){
+                   *ptrEncrypted=*dataPointers[pos%password.Length];
+                    ptrEncrypted++;
+                    dataPointers[pos%password.Length]++;
+                    pos++;
+                }
+                    dataPointers=GetPointers(ptFin,lengthFin;password,pos%password.Length);
+                    pos=0;
+                    for(int i=0,f=lengthFin;i<f;i++)
+                    {
+                          *ptrEncrypted=*dataPointers[pos%password.Length];
+                    ptrEncrypted++;
+                    dataPointers[pos%password.Length]++;
+                    pos++;
+                    }
+        }}}}
+    return decrypted;
 
 }
-static unsafe void PonFila(byte* ptrOut,byte* ptrIn,int longitudColumnas,int[] posicionesContraseña,int pos,int linea=-1){
-byte* aux;
- if(linea==-1)
-     linea=posicionesContraseña.Length;
-    //pongo la fila
-    for(int i=0;i<linea;i++)
-    {
-        aux=ptrOut+posicionesContraseña[pos%longitudColumnas];
-        *aux=*ptrIn;
-        
-        pos++;
-        ptrIn++;
-        
-    }
 
-}    
-
-
-
-    }
-return dataEncrypted;
-}
 public static byte[] Decrypt(byte[] data,byte[] password, LevelEncrypt level, Ordre order){//level y orden de posicionesPassword
 
-    byte[] decrypted=new byte[data.Length];
-    int[] posicionesPassword=GetPosPassword(password);
-
-    int longitudColumna=data.Length/password.Length;
-    unsafe{
-     byte* ptrData;
-     byte* ptrDecrypted;
-     
-     fixed(byte* ptData=data)
-     {
-      
-         ptrData=ptData;
-         fixed(byte* ptDecrypted=decrypted){
-         ptrDecrypted=ptDecrypted;
-             for(int i=0;i<data.Length;i++,ptrData+=password.Length){//ahora no se desde el navegador si se puede poner asi...
-                 *ptrDecrypted=*(ptrData+(posicionesContraseña[i%longitudColumnas]));
-                 ptrDecrypted++;
-                 
-                 
-             }
-         
-         
-         
-         }
-         
-         
-     }
-        
-        
-        
-        
-    }
-    
-    
-    
-    return decrypted.SubArray(decrypted.SearchArray(EncryptDecrypt.BytesChangeDefault));//si se pudiese empezar a buscar de atras hacia adelante mejor
-    
+    byte[] decrypted=new byte[LengthDecrypted(data,password,level,order)];
+int pos=0;
+        unsafe{
+            fixed(byte*ptData=data){
+                fixed(byte*ptDecrypted=decrypted){
+                    byte* ptrDecrypted=ptDecrypted;
+            byte*[] dataPointers=GetPointers(ptData,data.Length;password);
+                for(int i=0;i<decrypted.Length;i++){
+                   *ptrDecrypted=*dataPointers[pos%password.Length];
+                    ptrDecrypted++;
+                    dataPointers[pos%password.Length]++;
+                    pos++;
+                }
+        }}}
+    return decrypted;
 }
     
-static int[] GetPosPassword(byte[] password){
-//devuelvo la posicion por orden y orden de aparición
-int[] pos=new int[password.Length];
-int puestos=0;
-
-for(int i=0,f=byte.MaxValue,fin=password.Length-1;i<f&&puestos<fin;i++){
-for(int j=0;j<password.Length&&puestos<fin;j++)
+static unsafe byte*[] GetPointers(byte* data,int lengthData,byte[] password,int initPos=0){
+byte*[] pointers=new byte*[password.Length];
+int lengthParte=lengthData/password.Length;  
+int pos=0;    
+for(int j=byte.MinValue;j<byte.MaxValue&&pos<password.Length;j++)    
+for(int i=j==0?initPos:0;i<password.Length&&pos<password.Length;i++)
 {
-    if(i==password[j])
-      pos[puestos++]=j;
-}
-}
+    if(j==password[i]){
+    pointers[i]=data;
+        data+=lengthParte;
+        pos++;
+    }
 
-return pos;
 }
-
+    return pointers;
+}
 
 
 

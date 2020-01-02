@@ -7,7 +7,17 @@ public static class OldLost{
         }
         public static int LenghtDecrypted(byte[] dataEncrypted, byte[] password, LevelEncrypt level, Ordre order)
         {
-            return lenghtEncrypt;
+          byte[] dataFin;
+          int lengthEncrypt;
+          unsafe{
+          fixed(byte* ptDataEncrypted=dataEncrypted){
+          byte*[] pointers=GetPointers(ptDataEncrypted,dataEncrypted.Length,password);
+            pointers.Seek((dataEncrypted.Length/password.Length)-1);
+            dataFin=pointers.ReadLine();
+          }
+          }
+          
+            return dataEncrypted.Length-(dataFin.Length-dataFin.SearchArray(EncryptDecrypt.BytesChangeDefault));
         }
 public static byte[] Encrypt(byte[] data,byte[] password, LevelEncrypt level, Ordre order){//level y orden de posicionesPassword
 byte[] dataEncrypted=new byte[LengthEncrypted(data,password,level,order)];

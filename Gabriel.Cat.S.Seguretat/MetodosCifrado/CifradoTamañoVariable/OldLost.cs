@@ -1,6 +1,7 @@
 namespace Gabriel.Cat.S.Seguretat{
 
 public static class OldLost{
+
   public static int LenghtEncrypted(byte[] dataDecrypted, byte[] password, LevelEncrypt level, Ordre order)
         {
             return dataDecrypted.Length+EncryptDecrypt.BytesChangeDefault.Length+(password.Length-((dataDecrypted.Length+EncryptDecrypt.BytesChangeDefault.Length)/password.Length));

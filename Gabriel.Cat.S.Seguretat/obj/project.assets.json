@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETStandard,Version=v2.0": {
-      "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.1.4": {
+      "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.1.5": {
         "type": "package",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
@@ -60,15 +60,15 @@
     }
   },
   "libraries": {
-    "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.1.4": {
-      "sha512": "ph2OUo7l2gJ0tJt0hwCaD0Vv013rAEP5CUAdmsXhm0juQExuP29AOTKYuobHGB7Kx+pNyAlqDHBtMwagookbFg==",
+    "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.1.5": {
+      "sha512": "y+pvYCefRgpdoKlP1FLP/0ucaVUy53wX3iNpeeLw5ljUUo1YVvljRVUcE7VUxXgwjK6qN1YtfPaO2q8XAIKNQw==",
       "type": "package",
-      "path": "gabriel.cat.s.utilitats/1.0.4.4-preview1.1.4",
+      "path": "gabriel.cat.s.utilitats/1.0.4.4-preview1.1.5",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
         "LICENSE.txt",
-        "gabriel.cat.s.utilitats.1.0.4.4-preview1.1.4.nupkg.sha512",
+        "gabriel.cat.s.utilitats.1.0.4.4-preview1.1.5.nupkg.sha512",
         "gabriel.cat.s.utilitats.nuspec",
         "lib/netstandard2.0/Gabriel.Cat.S.Utilitats.dll"
       ]
@@ -325,7 +325,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Gabriel.Cat.S.Utilitats >= 1.0.4.4-preview1.1.4",
+      "Gabriel.Cat.S.Utilitats >= 1.0.4.4-preview1.1.5",
       "NETStandard.Library >= 2.0.3"
     ]
   },
@@ -333,7 +333,7 @@
     "C:\\Users\\tetra\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "1.0.2.2-Preview1.0.5",
+    "version": "1.0.2.2-Preview1.0.6",
     "restore": {
       "projectUniqueName": "C:\\Users\\tetra\\source\\repos\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "projectName": "Gabriel.Cat.S.Seguretat",
@@ -368,7 +368,7 @@
         "dependencies": {
           "Gabriel.Cat.S.Utilitats": {
             "target": "Package",
-            "version": "[1.0.4.4-preview1.1.4, )"
+            "version": "[1.0.4.4-preview1.1.5, )"
           },
           "NETStandard.Library": {
             "suppressParent": "All",

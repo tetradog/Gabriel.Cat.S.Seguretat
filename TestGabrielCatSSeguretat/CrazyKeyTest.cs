@@ -59,11 +59,11 @@ namespace TestGabrielCatSSeguretat
             new CrazyKey(10).Encrypt(Key.GetKey(100));
             Assert.IsTrue(true);
         }
-        [TestMethod]
-        public void GenerarBigKeyConLittleCrazyKey()
-        {
-            new CrazyKey(3).Encrypt(Key.GetKey(1000));
-            Assert.IsTrue(true);
-        }
+        //[TestMethod]
+        //public void GenerarBigKeyConLittleCrazyKey()
+        //{
+        //    new CrazyKey(3).Encrypt(Key.GetKey(1000));
+        //    Assert.IsTrue(true);
+        //}
     }
 }

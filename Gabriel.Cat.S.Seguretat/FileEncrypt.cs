@@ -101,6 +101,7 @@ namespace Gabriel.Cat.S.Seguretat
                     case DataEncrypt.Cesar: EncryptCesar(srIn, swOut, password, level, order); break;
                     case DataEncrypt.Disimulat: EncryptDisimulat(srIn, swOut, password, level, order); break;
                     case DataEncrypt.Perdut: EncryptPerdut(srIn, swOut, password, level, order); break;
+                    
                     default: throw new ArgumentOutOfRangeException("dataEncrypt");
                 }
             }

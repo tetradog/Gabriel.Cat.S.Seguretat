@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.0.4.4-preview1.0.6" />
+    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.0.4.4-preview1.1.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
   "version": 3,
   "targets": {
     ".NETStandard,Version=v2.0": {
-      "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.0.6": {
+      "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.1.4": {
         "type": "package",
         "dependencies": {
           "Microsoft.CSharp": "4.7.0",
@@ -60,14 +60,15 @@
     }
   },
   "libraries": {
-    "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.0.6": {
-      "sha512": "8iLTV6gtix4vYys1uLYSM+1jJja8HFNCpdHUJxu9pUTjkD5Sn6F1N4JLZPHztKNYK55MsZ/xaWYV2AchHfqa7w==",
+    "Gabriel.Cat.S.Utilitats/1.0.4.4-preview1.1.4": {
+      "sha512": "ph2OUo7l2gJ0tJt0hwCaD0Vv013rAEP5CUAdmsXhm0juQExuP29AOTKYuobHGB7Kx+pNyAlqDHBtMwagookbFg==",
       "type": "package",
-      "path": "gabriel.cat.s.utilitats/1.0.4.4-preview1.0.6",
+      "path": "gabriel.cat.s.utilitats/1.0.4.4-preview1.1.4",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "gabriel.cat.s.utilitats.1.0.4.4-preview1.0.6.nupkg.sha512",
+        "LICENSE.txt",
+        "gabriel.cat.s.utilitats.1.0.4.4-preview1.1.4.nupkg.sha512",
         "gabriel.cat.s.utilitats.nuspec",
         "lib/netstandard2.0/Gabriel.Cat.S.Utilitats.dll"
       ]
@@ -324,30 +325,25 @@
   },
   "projectFileDependencyGroups": {
     ".NETStandard,Version=v2.0": [
-      "Gabriel.Cat.S.Utilitats >= 1.0.4.4-preview1.0.6",
+      "Gabriel.Cat.S.Utilitats >= 1.0.4.4-preview1.1.4",
       "NETStandard.Library >= 2.0.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\tetra\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\tetra\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "1.0.2.2-Preview1.0.4",
+    "version": "1.0.2.2-Preview1.0.5",
     "restore": {
-      "projectUniqueName": "C:\\Users\\tetra\\Codigo fuente\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
+      "projectUniqueName": "C:\\Users\\tetra\\source\\repos\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "projectName": "Gabriel.Cat.S.Seguretat",
-      "projectPath": "C:\\Users\\tetra\\Codigo fuente\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
+      "projectPath": "C:\\Users\\tetra\\source\\repos\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
       "packagesPath": "C:\\Users\\tetra\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\tetra\\Codigo fuente\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\obj\\",
+      "outputPath": "C:\\Users\\tetra\\source\\repos\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
         "C:\\Users\\tetra\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netstandard2.0"
@@ -372,7 +368,7 @@
         "dependencies": {
           "Gabriel.Cat.S.Utilitats": {
             "target": "Package",
-            "version": "[1.0.4.4-preview1.0.6, )"
+            "version": "[1.0.4.4-preview1.1.4, )"
           },
           "NETStandard.Library": {
             "suppressParent": "All",
@@ -391,7 +387,7 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

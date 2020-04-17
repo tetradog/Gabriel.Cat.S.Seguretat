@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageProjectUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat</PackageProjectUrl>
     <RepositoryUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/tetradog/Gabriel.Cat.S.Seguretat/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <Company>Gabriel.Cat.Developer</Company>
     <Authors>Gabriel.Cat.Developer</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>

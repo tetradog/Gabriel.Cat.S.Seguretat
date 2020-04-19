@@ -40,7 +40,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Gabriel.Cat.S.Utilitats, Version=1.0.4.4, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Gabriel.Cat.S.Utilitats.1.0.4.4-preview1.1.5\lib\netstandard2.0\Gabriel.Cat.S.Utilitats.dll</HintPath>
+      <HintPath>..\packages\Gabriel.Cat.S.Utilitats.1.1.0\lib\netstandard2.0\Gabriel.Cat.S.Utilitats.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">

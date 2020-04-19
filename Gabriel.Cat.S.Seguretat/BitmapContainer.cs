@@ -18,7 +18,7 @@ namespace Gabriel.Cat.S.Seguretat
             int i = 0;
             while (pos < length)
             {
-                bmps.Add(lstBmps[i].Clone(System.Drawing.Imaging.PixelFormat.Format32bppArgb));
+                bmps.Add(lstBmps[i].Clon(System.Drawing.Imaging.PixelFormat.Format32bppArgb));
                 pos += lstBmps[i++].MaxLength(level);
             }
             return bmps;

@@ -101,7 +101,8 @@ namespace Gabriel.Cat.S.Seguretat
                     case DataEncrypt.Cesar: EncryptCesar(srIn, swOut, password, level, order); break;
                     case DataEncrypt.Disimulat: EncryptDisimulat(srIn, swOut, password, level, order); break;
                     case DataEncrypt.Perdut: EncryptPerdut(srIn, swOut, password, level, order); break;
-                    
+                    case DataEncrypt.OldLost: EncryptOldLost(srIn, swOut, password, level, order); break;
+
                     default: throw new ArgumentOutOfRangeException("dataEncrypt");
                 }
             }
@@ -111,7 +112,8 @@ namespace Gabriel.Cat.S.Seguretat
                 {
                     case DataEncrypt.Cesar: DecryptCesar(srIn, swOut, password, level, order); break;
                     case DataEncrypt.Disimulat: DecryptDisimulat(srIn, swOut, password, level, order); break;
-                    case DataEncrypt.Perdut: DencryptPerdut(srIn, swOut, password, level, order); break;
+                    case DataEncrypt.Perdut: DecryptPerdut(srIn, swOut, password, level, order); break;
+                    case DataEncrypt.OldLost: DecryptOldLost(srIn, swOut, password, level, order); break;
                     default: throw new ArgumentOutOfRangeException("dataEncrypt");
                 }
             }
@@ -121,6 +123,10 @@ namespace Gabriel.Cat.S.Seguretat
                 swOut.BaseStream.Position = posicionSw;
             }
         }
+
+
+
+
 
         #region SobreCarga Decrypt
         public static FileInfo Decrypt(this FileInfo fileToEncryp, string password, bool outputInADirefetnFile = false, DataEncrypt dataEncrypt = DataEncrypt.Cesar, LevelEncrypt level = LevelEncrypt.Normal, PasswordEncrypt passwordEncrypt = PasswordEncrypt.Nothing, Ordre order = Ordre.Consecutiu)
@@ -148,8 +154,17 @@ namespace Gabriel.Cat.S.Seguretat
         #endregion
 
 
-      
+
         #region EncryptMethods falta testing
+        private static void EncryptOldLost(BinaryReader srIn, BinaryWriter swOut, byte[] password, LevelEncrypt level, Ordre order)
+        {
+
+            swOut.Write(OldLost.Encrypt(srIn.ReadToEnd(), password, level, order));
+        }
+        private static void DecryptOldLost(BinaryReader srIn, BinaryWriter swOut, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            swOut.Write(OldLost.Decrypt(srIn.ReadToEnd(), password, level, order));
+        }
 
         private static void EncryptCesar(BinaryReader srIn, BinaryWriter swOut, byte[] password, LevelEncrypt level, Ordre order)
         {
@@ -253,7 +268,7 @@ namespace Gabriel.Cat.S.Seguretat
             }
         }
 
-        private static void DencryptPerdut(BinaryReader srIn, BinaryWriter swOut, byte[] password, LevelEncrypt level, Ordre order)
+        private static void DecryptPerdut(BinaryReader srIn, BinaryWriter swOut, byte[] password, LevelEncrypt level, Ordre order)
         {
             ComunPerdut(srIn, swOut, password, level, order, false);
         }

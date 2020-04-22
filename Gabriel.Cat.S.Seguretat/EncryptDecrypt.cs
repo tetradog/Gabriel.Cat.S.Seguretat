@@ -8,7 +8,7 @@ namespace Gabriel.Cat.S.Seguretat
 {
     public enum LevelEncrypt
     {
-        Lowest,
+        Lowest=1,
         Low,
         Normal,
         High,
@@ -34,6 +34,7 @@ namespace Gabriel.Cat.S.Seguretat
         /// It is a method to disorder bytes using a password, avoid (char)0 or/and two consecutive 0x0 
         /// </summary>
         Perdut,
+        OldLost
     }
     public static class EncryptDecrypt
     {
@@ -55,6 +56,7 @@ namespace Gabriel.Cat.S.Seguretat
                 case DataEncrypt.Cesar: lengthEncrypt = Cesar.LenghtEncrtypt(lenghtDecrypt, password, level, order); break;
                 case DataEncrypt.Perdut: lengthEncrypt = Perdut.LenghtEncrtypt(lenghtDecrypt, password, level, order); break;
                 case DataEncrypt.Disimulat: lengthEncrypt = Disimulat.LenghtEncrtypt(lenghtDecrypt, password, level, order); break;
+                case DataEncrypt.OldLost: lengthEncrypt = OldLost.LenghtEncrtypt(lenghtDecrypt, password, level, order);break;
                 default: throw new ArgumentOutOfRangeException();
             }
             return lengthEncrypt;
@@ -68,6 +70,7 @@ namespace Gabriel.Cat.S.Seguretat
                 case DataEncrypt.Cesar: lengthDecrypt = Cesar.LenghtDecrypt(lenghtEncrypt, password, level, order);break;
                 case DataEncrypt.Perdut: lengthDecrypt = Perdut.LenghtDecrypt(lenghtEncrypt, password, level, order); break;
                 case DataEncrypt.Disimulat: lengthDecrypt = Disimulat.LenghtDecrypt(lenghtEncrypt, password, level, order); break;
+                case DataEncrypt.OldLost: lengthDecrypt = OldLost.LenghtDecrypt(lenghtEncrypt, password, level, order); break;
                 default:throw new ArgumentOutOfRangeException();
             }
             return lengthDecrypt;
@@ -122,6 +125,9 @@ namespace Gabriel.Cat.S.Seguretat
                 case DataEncrypt.Perdut:
                     bytesEncrypted = Perdut.Encrypt(bytes, password, level, order);
                     break;
+                case DataEncrypt.OldLost:
+                    bytesEncrypted = OldLost.Encrypt(bytes, password, level, order);
+                    break;
                 default: throw new ArgumentOutOfRangeException("dataEncrypt");
             }
 
@@ -163,6 +169,9 @@ namespace Gabriel.Cat.S.Seguretat
                     break;
                 case DataEncrypt.Perdut:
                     bytesDecrypted = Perdut.Decrypt(bytes, password, level, order);
+                    break;
+                case DataEncrypt.OldLost:
+                    bytesDecrypted = OldLost.Decrypt(bytes, password, level, order);
                     break;
                 default: throw new ArgumentOutOfRangeException("dataDecrypt");
             }

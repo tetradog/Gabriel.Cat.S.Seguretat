@@ -12,7 +12,7 @@ namespace Gabriel.Cat.S.Seguretat
            
             public enum MetodoEncrypt
             {
-                Cesar,Perdut
+                Cesar,Perdut//,OldLost
             }
             static LlistaOrdenada<IdUnico, SortedList<byte, Key>> dicKeysGen;
             static readonly int MetodosEncryptLength;
@@ -87,8 +87,15 @@ namespace Gabriel.Cat.S.Seguretat
                 {
                     case MetodoEncrypt.Cesar:CesarArray(array, passwordBytes);break;
                     case MetodoEncrypt.Perdut: PierdeArray(array, passwordBytes); break;
+                   // case MetodoEncrypt.OldLost: OldLostArray(array, passwordBytes); break;
                 }
             }
+
+            private static void OldLostArray(int[] array, byte[] passwordBytes)
+            {//hacer más adelante
+                throw new NotImplementedException();
+            }
+
             static void PierdeArray(int[] array, byte[] password)
             {
                 int aux;

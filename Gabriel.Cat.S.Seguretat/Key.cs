@@ -393,13 +393,14 @@ namespace Gabriel.Cat.S.Seguretat
         }
         public static Key GetKey(IList<string> passwords)
         {
-            const int CESAR = 0, PERDUT = 1;
+            const int CESAR = 0, PERDUT = 2,OLDLOST=1;
             if (passwords == null)
                 throw new ArgumentNullException();
 
 
             Key key = new Key();
             key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
+            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoOldLost, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
             key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
             key.ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash, false));
             for (int i = 0; i < passwords.Count; i++)
@@ -410,47 +411,48 @@ namespace Gabriel.Cat.S.Seguretat
             if (passwords.Count != 0)
             {
                 key.ItemsKey[0].MethodData = PERDUT;
-                key.ItemsKey[key.ItemsKey.Count - 1].MethodData = PERDUT;
+                key.ItemsKey[key.ItemsKey.Count - 1].MethodData = OLDLOST;
             }
             return key;
         }
+
 
         private static int GetLenghtMetodosCifradoLongitudInvariable(int lenght)
         {
             return lenght;
         }
-
+        private static byte[] MetodoOldLost(byte[] data, string password, bool encrypt)
+        {
+            return MetodoComun(data, password, encrypt, DataEncrypt.OldLost);
+        }
         private static byte[] MetodoPerdut(byte[] data, string password, bool encrypt)
         {
-            byte[] dataOut;
-            if (encrypt)
-            {
-                dataOut = data.Encrypt(password, DataEncrypt.Perdut, LevelEncrypt.Highest);
-            }
-            else
-            {
-                dataOut = data.Decrypt(password, DataEncrypt.Perdut, LevelEncrypt.Highest);
-            }
-            return dataOut;
+            return MetodoComun(data, password, encrypt, DataEncrypt.Perdut);
         }
 
         private static byte[] MetodoCesar(byte[] data, string password, bool encrypt)
         {
-            byte[] dataOut;
-            if (encrypt)
-            {
-                dataOut = data.Encrypt(password, DataEncrypt.Cesar, LevelEncrypt.Highest);
-            }
-            else
-            {
-                dataOut = data.Decrypt(password, DataEncrypt.Cesar, LevelEncrypt.Highest);
-            }
-            return dataOut;
+            return MetodoComun(data, password, encrypt, DataEncrypt.Cesar);
         }
 
         private static string MetodoHash(string password)
         {
             return password.EncryptNotReverse();
+        }
+
+        static byte[] MetodoComun(byte[] data, string password, bool encrypt, DataEncrypt metodo)
+        {
+            byte[] result;
+            if (encrypt)
+            {
+                result = data.Encrypt(password, metodo, LevelEncrypt.Highest);
+            }
+            else
+            {
+                result = data.Decrypt(password, metodo, LevelEncrypt.Highest);
+
+            }
+            return result;
         }
 
 

@@ -204,5 +204,11 @@ namespace Gabriel.Cat.S.Extension
 
             }
         }
+
+
+        public static byte[] ReadToEnd(this BinaryReader br)
+        {
+            return br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position));
+        }
     }
 }

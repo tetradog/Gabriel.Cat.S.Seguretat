@@ -18,7 +18,7 @@ namespace Gabriel.Cat.S.Seguretat
             return lenghtEncrypt;
         }
 
-        static unsafe byte*[] GetFilas(byte[] data, int lengthPassword)
+        private static unsafe byte*[] GetFilas(byte[] data, int lengthPassword)
         {
             byte* ptrData;
             byte*[] filas;
@@ -39,20 +39,20 @@ namespace Gabriel.Cat.S.Seguretat
 
             return filas;
         }
-        static unsafe byte*[] OrdenaFilasEncrypt(byte*[] filas,byte[] password ,LevelEncrypt level, Ordre ordre)
+        private static unsafe byte*[] OrdenaFilasEncrypt(byte*[] filas,byte[] password ,LevelEncrypt level, Ordre ordre)
         {
-            byte*[] filasOrdenadas = new byte*[filas.Length];
+            byte*[] filasDesordenadas = new byte*[filas.Length];
             int[] posFilas = GetPosicionesFilas(password, filas.Length, level, ordre);
 
             //pongo las filas en su sitio
             for (int i = 0; i < filas.Length; i++)
             {
-                filasOrdenadas[posFilas[i]] = filas[i];
+                filasDesordenadas[posFilas[i]] = filas[i];
             }
 
-            return filasOrdenadas;
+            return filasDesordenadas;
         }
-        static unsafe byte[] ReadColumn(byte*[] filas, int column, bool isComplete)
+        private static unsafe byte[] ReadColumn(byte*[] filas, int column, bool isComplete)
         {
             byte[] columna;
             int numFilas = filas.Length;
@@ -66,7 +66,7 @@ namespace Gabriel.Cat.S.Seguretat
 
             return columna;
         }
-        static unsafe void WriteColumn(byte*[] filas, int column, byte* dataColumn, bool isComplete)
+        private static unsafe void WriteColumn(byte*[] filas, int column, byte* dataColumn, bool isComplete)
         {
             for (int i = 0, f = isComplete ? filas.Length : filas.Length - 1; i < f; i++)
             {
@@ -75,17 +75,29 @@ namespace Gabriel.Cat.S.Seguretat
             }
 
         }
-        static int[] GetPositionPassword(byte[] password)
+        private static int[] GetPositionPassword(byte[] password)
         {
             byte[] passOrdenada = (byte[])password.Clone();//mirar que haga bien la copia!!
             int[] posPassword = new int[passOrdenada.Length];
+            SortedList<int, int> dicPosiciones = new SortedList<int, int>();
+            int aux;
             passOrdenada.Sort(SortMethod.QuickSort);
 
             //pongo las posiciones 
-
+            for (int i = 0; i < password.Length; i++)
+            {
+                if (dicPosiciones.ContainsKey(passOrdenada[i]))
+                    aux = dicPosiciones[passOrdenada[i]]+1;
+                else aux = 0;
+                posPassword[i] = password.IndexOf(aux, passOrdenada[i]);
+                if (dicPosiciones.ContainsKey(passOrdenada[i]))
+                    dicPosiciones.Remove(passOrdenada[i]);
+                dicPosiciones.Add(passOrdenada[i], posPassword[i]);
+            }
             return posPassword;
 
         }
+
         public static byte[] Encrypt(byte[] data,byte[] password,LevelEncrypt level,Ordre ordre)
         {
             bool filaCompleta;
@@ -100,8 +112,8 @@ namespace Gabriel.Cat.S.Seguretat
                 filas = OrdenaFilasEncrypt(filas,password, level, ordre);
                 for(int i = 0; i < password.Length; i++)
                 {
-                    filaCompleta = posPassword[i] <= lineaFinalLenght;
-                    ms.Write(ReadColumn(filas, posPassword[i], filaCompleta),0, filaCompleta?filas.Length:filas.Length-1);
+                    filaCompleta = posPassword[i] < lineaFinalLenght;
+                    ms.Write(ReadColumn(filas, i, filaCompleta),0, filaCompleta?password.Length: lineaFinalLenght);
                 }
                 
             }
@@ -129,7 +141,7 @@ namespace Gabriel.Cat.S.Seguretat
                     for (int i = 0; i < posPassword.Length; i++)
                     {
                         columnasOrdenadas[posPassword[i]] = ptrData;
-                        filaCompleta = posPassword[i] <= lineaFinalLength;
+                        filaCompleta = posPassword[i] < lineaFinalLength;
                         ptrData +=filaCompleta? numFilas:numFilas-1;
                     }
                     filas = OrdenaFilasDecrypt(columnasOrdenadas,password,lineaFinalLength,numFilas,level, ordre);

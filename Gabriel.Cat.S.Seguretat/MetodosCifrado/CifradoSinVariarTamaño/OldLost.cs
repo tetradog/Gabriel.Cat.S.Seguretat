@@ -9,11 +9,11 @@ namespace Gabriel.Cat.S.Seguretat
 
     public static class OldLost
     {
-        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password, LevelEncrypt level, Ordre order)
+        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password=default, LevelEncrypt level = default, Ordre order = default)
         {
             return lengthDecrypt;
         }
-        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password, LevelEncrypt level, Ordre order)
+        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password = default, LevelEncrypt level = default, Ordre order = default)
         {
             return lenghtEncrypt;
         }
@@ -39,15 +39,10 @@ namespace Gabriel.Cat.S.Seguretat
 
             return filas;
         }
-        static unsafe byte*[] OrdenaFilasEncrypt(byte*[] filas, LevelEncrypt level, Ordre ordre)
+        static unsafe byte*[] OrdenaFilasEncrypt(byte*[] filas,byte[] password ,LevelEncrypt level, Ordre ordre)
         {
             byte*[] filasOrdenadas = new byte*[filas.Length];
-            int[] posFilas = new int[filas.Length];
-            int salto = (int)level;
-
-            //uso el salto y el orden para poner su posicion
-
-
+            int[] posFilas = GetPosicionesFilas(password, filas.Length, level, ordre);
 
             //pongo las filas en su sitio
             for (int i = 0; i < filas.Length; i++)
@@ -82,7 +77,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
         static int[] GetPositionPassword(byte[] password)
         {
-            byte[] passOrdenada = (byte[])password.Clone();
+            byte[] passOrdenada = (byte[])password.Clone();//mirar que haga bien la copia!!
             int[] posPassword = new int[passOrdenada.Length];
             passOrdenada.Sort(SortMethod.QuickSort);
 
@@ -102,7 +97,7 @@ namespace Gabriel.Cat.S.Seguretat
             unsafe
             {
                 byte*[] filas = GetFilas(data, password.Length);
-                filas = OrdenaFilasEncrypt(filas, level, ordre);
+                filas = OrdenaFilasEncrypt(filas,password, level, ordre);
                 for(int i = 0; i < password.Length; i++)
                 {
                     filaCompleta = posPassword[i] <= lineaFinalLenght;
@@ -137,7 +132,7 @@ namespace Gabriel.Cat.S.Seguretat
                         filaCompleta = posPassword[i] <= lineaFinalLength;
                         ptrData +=filaCompleta? numFilas:numFilas-1;
                     }
-                    filas = OrdenaFilasDecrypt(columnasOrdenadas,password.Length,lineaFinalLength,numFilas,level, ordre);
+                    filas = OrdenaFilasDecrypt(columnasOrdenadas,password,lineaFinalLength,numFilas,level, ordre);
                 }
                 for (int i = 0; i < filas.Length; i++)
                     ms.Write(filas[i],0,filas[i].Length);
@@ -147,18 +142,31 @@ namespace Gabriel.Cat.S.Seguretat
             return decrypted;
         }
 
-        private static unsafe byte[][] OrdenaFilasDecrypt(byte*[] columnasOrdenadas,int lengthFila,int lineaFinalLength,int numFilas, LevelEncrypt level, Ordre ordre)
+        private static unsafe byte[][] OrdenaFilasDecrypt(byte*[] columnasOrdenadas,byte[] password,int lineaFinalLength,int numFilas, LevelEncrypt level, Ordre ordre)
         {
             byte[][] filasDesordenadas = new byte[numFilas][];
             byte[][] filasOrdenadas = new byte[numFilas][];
             int lastFila = numFilas - 1;
+            int[] posFilas;
             for (int i = 0, f = lastFila; i < f; i++)
-                filasDesordenadas[i] = ReadLine(columnasOrdenadas, i, lengthFila);
+                filasDesordenadas[i] = ReadLine(columnasOrdenadas, i, password.Length);
             filasDesordenadas[lastFila] = ReadLine(columnasOrdenadas,lastFila, lineaFinalLength);
             //las ordeno
+            posFilas = GetPosicionesFilas(password, numFilas, level, ordre);
+            for (int i = 0; i < numFilas; i++)
+                filasOrdenadas[posFilas[i]] = filasDesordenadas[i];
 
             return filasOrdenadas;
 
+        }
+
+        private static int[] GetPosicionesFilas(byte[] password, int numFilas, LevelEncrypt level, Ordre ordre)
+        {
+            int[] posFilas = new int[numFilas];
+            for (int i = 0; i < numFilas; i++)
+                posFilas[i] = i;
+            Perdut.EncryptDecrypt(posFilas, password, level, ordre);
+            return posFilas;
         }
 
         private static unsafe byte[] ReadLine(byte*[] columnasOrdenadas, int linea, int lentgth)

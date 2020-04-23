@@ -57,12 +57,32 @@ namespace Gabriel.Cat.S.Seguretat
             byte* ptBytes = ptrBytes.PtrArray;//creo que optmizo un poquito al no entrar en la propiedad :D
             for (long i = leftToRight ? 0 : ptrBytes.Length - 1, f = leftToRight ? ptrBytes.Length - 1 : 0; leftToRight ? i <= f : i >= f; i += direccion)
             {
-                posAux = (EncryptDecrypt.CalculoNumeroCifrado(password, level, order, i) + i) % ptrBytes.Length;
+                posAux = (Seguretat.EncryptDecrypt.CalculoNumeroCifrado(password, level, order, i) + i) % ptrBytes.Length;
                 aux = ptBytes[posAux];
                 ptBytes[posAux] = ptBytes[i];
                 ptBytes[i] = aux;
             }
 
+        }
+       public static  void EncryptDecrypt(int[] array, byte[] password, LevelEncrypt level, Ordre order, bool encrypt=true)
+        {//copy and paste TractaPerdut
+            int aux;
+            long posAux;
+            int direccion = encrypt ? 1 : -1;
+            unsafe
+            {
+                fixed (int* ptrArray = array)
+                {
+                    int* ptArray = ptrArray;
+                    for (long i = encrypt ? 0 : array.Length - 1, f = encrypt ? array.Length - 1 : 0; encrypt ? i <= f : i >= f; i += direccion)
+                    {
+                        posAux = (Seguretat.EncryptDecrypt.CalculoNumeroCifrado(password, level, order, i) + i) % array.Length;
+                        aux = ptArray[posAux];
+                        ptArray[posAux] = ptArray[i];
+                        ptArray[i] = aux;
+                    }
+                }
+            }
         }
 
     }

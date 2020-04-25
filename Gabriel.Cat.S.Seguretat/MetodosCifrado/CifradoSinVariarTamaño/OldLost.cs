@@ -77,10 +77,11 @@ namespace Gabriel.Cat.S.Seguretat
         }
         private static int[] GetPositionPassword(byte[] password)
         {
+            int aux;
             byte[] passOrdenada = (byte[])password.Clone();//mirar que haga bien la copia!!
             int[] posPassword = new int[passOrdenada.Length];
             SortedList<int, int> dicPosiciones = new SortedList<int, int>();
-            int aux;
+
             passOrdenada.Sort(SortMethod.QuickSort);
 
             //pongo las posiciones 
@@ -104,16 +105,20 @@ namespace Gabriel.Cat.S.Seguretat
             byte[] encrypted = new byte[data.Length];
             int[] posPassword = GetPositionPassword(password);
             int lineaFinalLenght = data.Length % password.Length;
-
+            int length = data.Length < password.Length ? data.Length : password.Length;
             MemoryStream ms = new MemoryStream(encrypted);
+
+            if (lineaFinalLenght == 0)//si no hay una incompleta quiere decir que acaba junto con el ultimo caracter de la password
+                lineaFinalLenght = password.Length;
+
             unsafe
             {
                 byte*[] filas = GetFilas(data, password.Length);
                 filas = OrdenaFilasEncrypt(filas,password, level, ordre);
-                for(int i = 0; i < password.Length; i++)
+                for(int i = 0; i < password.Length&&i<data.Length; i++)
                 {
-                    filaCompleta = posPassword[i] < lineaFinalLenght;
-                    ms.Write(ReadColumn(filas, i, filaCompleta),0, filaCompleta?password.Length: lineaFinalLenght);
+                    filaCompleta = posPassword[i]!=filas.Length-1;
+                    ms.Write(ReadColumn(filas, i, filaCompleta),0, filaCompleta?length: lineaFinalLenght);
                 }
                 
             }
@@ -124,24 +129,33 @@ namespace Gabriel.Cat.S.Seguretat
         {
             bool filaCompleta;
             byte[][] filas;
+            int numFilas;
             byte[] decrypted = new byte[data.Length];
             int[] posPassword = GetPositionPassword(password);
             int lineaFinalLength = data.Length % password.Length;
-            int numFilas;
-
             MemoryStream ms = new MemoryStream(decrypted);
+
+            if (lineaFinalLength == 0)//si no hay una incompleta quiere decir que acaba junto con el ultimo caracter de la password
+                lineaFinalLength = password.Length;
+
+
             unsafe
             {
                 byte* ptrData;
                 byte*[] columnasOrdenadas = new byte*[posPassword.Length];
+
                 numFilas=data.Length / columnasOrdenadas.Length;
+
+                if (data.Length % columnasOrdenadas.Length != 0)
+                    numFilas++;
+
                 fixed (byte* ptData = data)
                 {
                     ptrData = ptData;
                     for (int i = 0; i < posPassword.Length; i++)
                     {
                         columnasOrdenadas[posPassword[i]] = ptrData;
-                        filaCompleta = posPassword[i] < lineaFinalLength;
+                        filaCompleta = posPassword[i] != numFilas- 1;
                         ptrData +=filaCompleta? numFilas:numFilas-1;
                     }
                     filas = OrdenaFilasDecrypt(columnasOrdenadas,password,lineaFinalLength,numFilas,level, ordre);

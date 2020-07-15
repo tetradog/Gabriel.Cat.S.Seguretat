@@ -191,8 +191,8 @@ namespace Gabriel.Cat.S.Seguretat
             int[] posFilas = new int[numFilas];
             for (int i = 0; i < numFilas; i++)
                 posFilas[i] = i;
-            Perdut.EncryptDecrypt(posFilas, password, level, ordre);
-            return posFilas;
+
+            return Perdut.Encrypt(posFilas, password, level, ordre);
         }
 
         private static unsafe byte[] ReadLine(byte*[] columnasOrdenadas, int linea, int lentgth)

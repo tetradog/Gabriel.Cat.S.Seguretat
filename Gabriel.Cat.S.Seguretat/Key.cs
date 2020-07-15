@@ -127,8 +127,13 @@ namespace Gabriel.Cat.S.Seguretat
         public Key(IList<ItemKey> itemsKey, IdUnico id = null)
             : this(id)
         {
+            InitMethods();
+
             ItemsKey.AddRange(itemsKey);
         }
+
+
+
         ~Key()
         {
             Dispose();
@@ -147,7 +152,13 @@ namespace Gabriel.Cat.S.Seguretat
         public Llista<ItemEncryptationPassword> ItemsEncryptPassword { get; private set; }
 
         public IdUnico Id { get; private set; }
-
+        private void InitMethods()
+        {
+            ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
+         //todavia no funciona //  ItemsEncryptData.Add(new ItemEncryptationData(MetodoOldLost, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
+            ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
+            ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash, false));
+        }
         public byte[] Encrypt(byte[] data)
         {
             ItemEncryptationData itemEncryptData;
@@ -399,10 +410,7 @@ namespace Gabriel.Cat.S.Seguretat
 
 
             Key key = new Key();
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoCesar, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoOldLost, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
-            key.ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
-            key.ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash, false));
+            key.InitMethods();
             for (int i = 0; i < passwords.Count; i++)
             {
                 if (!String.IsNullOrEmpty(passwords[i]))

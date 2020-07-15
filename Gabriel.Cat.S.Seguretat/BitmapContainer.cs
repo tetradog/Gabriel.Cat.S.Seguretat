@@ -105,7 +105,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
         private unsafe static byte* SetData(this Bitmap bmp, byte* data, LevelEncrypt level)
         {
-            bmp.TrataBytes((MetodoTratarBytePointer)((ptrData) =>
+            bmp.TrataBytes((MetodoTratarUnmanagedTypePointer<byte>)((ptrData) =>
             {//se recorre todo el bmp y se pone la informacion en su sitio teniendo en cuenta el nivel de encriptación
 
 

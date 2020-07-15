@@ -13,12 +13,12 @@ namespace Gabriel.Cat.S.Seguretat
             return lengthDecrypt;
         }
 
-        public static byte[] Decrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre ordre)
+        public static T[] Decrypt<T>(T[] bytes, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
         {
             return ComunEncryptDecrypt(bytes, password, level, ordre, false);
         }
 
-        public static byte[] Encrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre ordre)
+        public static T[] Encrypt<T>(T[] bytes, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
         {
             return ComunEncryptDecrypt(bytes, password, level, ordre, true);
         }
@@ -27,7 +27,7 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return lenghtEncrypt;
         }
-         static byte[] ComunEncryptDecrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order, bool toEncrypt)
+         static T[] ComunEncryptDecrypt<T>(T[] bytes, byte[] password, LevelEncrypt level, Ordre order, bool toEncrypt) where T:unmanaged
         {
             bytes = bytes.SubArray(0,bytes.Length);//optimizar...si se puede claro 
 
@@ -48,13 +48,13 @@ namespace Gabriel.Cat.S.Seguretat
 
        
 
-         static unsafe void TractaPerdut(UnsafeArray ptrBytes, byte[] password, LevelEncrypt level, Ordre order, bool leftToRight)
+         static unsafe void TractaPerdut<T>(UnsafeArray<T> ptrBytes, byte[] password, LevelEncrypt level, Ordre order, bool leftToRight) where T:unmanaged
         {//va bien :D
-            byte aux;
+            T aux;
             long posAux;
             int direccion = leftToRight ? 1 : -1;
 
-            byte* ptBytes = ptrBytes.PtrArray;//creo que optmizo un poquito al no entrar en la propiedad :D
+            T* ptBytes = ptrBytes.PtrArray;//creo que optmizo un poquito al no entrar en la propiedad :D
             for (long i = leftToRight ? 0 : ptrBytes.Length - 1, f = leftToRight ? ptrBytes.Length - 1 : 0; leftToRight ? i <= f : i >= f; i += direccion)
             {
                 posAux = (Seguretat.EncryptDecrypt.CalculoNumeroCifrado(password, level, order, i) + i) % ptrBytes.Length;
@@ -63,26 +63,6 @@ namespace Gabriel.Cat.S.Seguretat
                 ptBytes[i] = aux;
             }
 
-        }
-       public static  void EncryptDecrypt(int[] array, byte[] password, LevelEncrypt level, Ordre order, bool encrypt=true)
-        {//copy and paste TractaPerdut
-            int aux;
-            long posAux;
-            int direccion = encrypt ? 1 : -1;
-            unsafe
-            {
-                fixed (int* ptrArray = array)
-                {
-                    int* ptArray = ptrArray;
-                    for (long i = encrypt ? 0 : array.Length - 1, f = encrypt ? array.Length - 1 : 0; encrypt ? i <= f : i >= f; i += direccion)
-                    {
-                        posAux = (Seguretat.EncryptDecrypt.CalculoNumeroCifrado(password, level, order, i) + i) % array.Length;
-                        aux = ptArray[posAux];
-                        ptArray[posAux] = ptArray[i];
-                        ptArray[i] = aux;
-                    }
-                }
-            }
         }
 
     }

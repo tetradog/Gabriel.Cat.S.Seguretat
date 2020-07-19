@@ -6,6 +6,19 @@ using System.Text;
 
 namespace Gabriel.Cat.S.Seguretat
 {
+    public class Context<T> where T:unmanaged
+    {
+        public long InitDataOut { get; set; }
+        public long InitDataIn => ForI;
+        public long ForI { get; set; }
+        public long ForF { get; set; }
+        public long Pos { get; set; }
+        public T[] DataOut { get; set; }
+        public T[] DataIn { get; set; }
+        public bool Continua { get; set; } = true;
+        public bool Acabado => ForI == ForF;
+        public int Aux { get; set; }
+    }
     public enum LevelEncrypt
     {
         Lowest=1,

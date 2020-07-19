@@ -39,26 +39,29 @@ namespace Gabriel.Cat.S.Seguretat
             longitud--;
             return longitud;
         }
-        public static byte[] Encrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order)
-        {//por testear la ultima cosa :D
-            byte[] bytesDisimulats;
-            int pos;
+
+        public static byte[] Encrypt(byte[] data,byte[] password,LevelEncrypt level,Ordre ordre)
+        {
+            Context<byte> context = new Context<byte>();
+            context.DataIn = data;
+            context.DataOut = new byte[LenghtEncrtypt(context.DataIn.Length, password, level, ordre)];
+            Encrypt(context, password, level, ordre);
+            return context.DataOut;
+        }
+        public static Context<byte> Encrypt(Context<byte> context, byte[] password, LevelEncrypt level, Ordre order)
+        {
+
             int numBytesRandom;
-          
-            //calculo la longitud final
-           
-            bytesDisimulats = new byte[LenghtEncrtypt(bytes.Length,password,level,order)];
-            pos = 0;
             unsafe
             {
                 byte* ptrBytesDisimulats, ptrBytes;
-                bytesDisimulats.UnsafeMethod((unsBytesDisimulats) => bytes.UnsafeMethod(unsBytes => {
-                    ptrBytesDisimulats = unsBytesDisimulats.PtrArray;
-                    ptrBytes = unsBytes.PtrArray;
-                    for (long i = 0, f = bytes.Length; i < f; i++)
+                context.DataOut.UnsafeMethod((unsBytesDisimulats) => context.DataIn.UnsafeMethod(unsBytes => {
+                    ptrBytesDisimulats = unsBytesDisimulats.PtrArray+context.InitDataOut;
+                    ptrBytes = unsBytes.PtrArray+context.InitDataIn;
+                    for (; context.ForI < context.ForF&&context.Continua; context.ForI++)
                     {
                         //recorro la array de bytes y pongo los bytes nuevos que tocan
-                        numBytesRandom =EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);
+                        numBytesRandom =EncryptDecrypt.CalculoNumeroCifrado(password, level, order, context.Pos);
                         for (int j = 0; j < numBytesRandom; j++)
                         {
                             *ptrBytesDisimulats = (byte)MiRandom.Next(byte.MaxValue + 1);
@@ -67,49 +70,56 @@ namespace Gabriel.Cat.S.Seguretat
                         *ptrBytesDisimulats = *ptrBytes;
                         ptrBytesDisimulats++;
                         ptrBytes++;
-                        pos += 2;
+                        context.Pos += 2;
                     }
-                    //para disumular el ultimo!
-                    numBytesRandom = EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);
-                    for (int j = 0; j < numBytesRandom; j++)
+                    if (context.Continua)
                     {
-                        *ptrBytesDisimulats = (byte)MiRandom.Next(byte.MaxValue + 1);
-                        ptrBytesDisimulats++;
+                        //para disumular el ultimo!
+                        numBytesRandom = EncryptDecrypt.CalculoNumeroCifrado(password, level, order, context.Pos);
+                        for (int j = 0; j < numBytesRandom; j++)
+                        {
+                            *ptrBytesDisimulats = (byte)MiRandom.Next(byte.MaxValue + 1);
+                            ptrBytesDisimulats++;
+                        }
                     }
                 }));
             }
-            return bytesDisimulats;
+            return context;
 
 
         }
-        public static byte[] Decrypt(byte[] bytes, byte[] password, LevelEncrypt level, Ordre order)
-        {
-            byte[] bytesTrobats;
-            int pos = 0;
-            bytesTrobats = new byte[LenghtDecrypt(bytes.Length,password,level,order)];//el ultimo es random tambien para disimular el ultimo real
-            pos = 0;
 
-            unsafe
+        public static byte[] Decrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre ordre)
+        {
+            Context<byte> context = new Context<byte>();
+            context.DataIn = data;
+            context.DataOut = new byte[LenghtDecrypt(context.DataIn.Length, password, level, ordre)];
+            Decrypt(context, password, level, ordre);
+            return context.DataOut;
+        }
+        public static Context<byte>  Decrypt(Context<byte> context, byte[] password, LevelEncrypt level, Ordre order)
+        {
+              unsafe
             {
                 byte* ptrBytes, ptrBytesTrobats;
-                bytesTrobats.UnsafeMethod((unsBytesTrobats) => bytes.UnsafeMethod(unsBytes => {
-                    ptrBytesTrobats = unsBytesTrobats.PtrArray;
-                    ptrBytes = unsBytes.PtrArray;
-                    for (int i = 0, f = bytesTrobats.Length + 1; i < f; i++)
+                context.DataOut.UnsafeMethod((unsBytesTrobats) => context.DataIn.UnsafeMethod(unsBytes => {
+                    ptrBytesTrobats = unsBytesTrobats.PtrArray+context.InitDataOut;
+                    ptrBytes = unsBytes.PtrArray+context.InitDataIn;
+                    for (; context.ForI < context.ForF; context.ForI++)
                     {
                         //recorro la array de bytes y pongo los bytes nuevos que tocan
-                        ptrBytes += EncryptDecrypt.CalculoNumeroCifrado(password, level, order, pos);
+                        ptrBytes += EncryptDecrypt.CalculoNumeroCifrado(password, level, order, context.Pos);
                         //me salto los bytes random
                         *ptrBytesTrobats = *ptrBytes;
                         //pongo el byte original
                         ptrBytesTrobats++;
                         //avanzo
                         ptrBytes++;
-                        pos += 2;
+                        context.Pos += 2;
                     }
                 }));
             }
-            return bytesTrobats;
+            return context;
         }
     }
 }

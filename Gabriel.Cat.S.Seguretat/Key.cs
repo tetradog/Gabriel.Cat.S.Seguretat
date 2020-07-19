@@ -124,10 +124,11 @@ namespace Gabriel.Cat.S.Seguretat
             ItemsEncryptData = new Llista<ItemEncryptationData>();
             ItemsEncryptPassword = new Llista<ItemEncryptationPassword>();
         }
-        public Key(IList<ItemKey> itemsKey, IdUnico id = null)
+        public Key(IList<ItemKey> itemsKey,bool initDefaultMethods=true, IdUnico id = null)
             : this(id)
         {
-            InitMethods();
+            if(initDefaultMethods)
+               InitMethods();
 
             ItemsKey.AddRange(itemsKey);
         }
@@ -404,7 +405,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
         public static Key GetKey(IList<string> passwords)
         {
-            const int CESAR = 0, PERDUT = 2,OLDLOST=1;
+            const int CESAR = 0, PERDUT = 1;//,OLDLOST=1;
             if (passwords == null)
                 throw new ArgumentNullException();
 
@@ -419,7 +420,8 @@ namespace Gabriel.Cat.S.Seguretat
             if (passwords.Count != 0)
             {
                 key.ItemsKey[0].MethodData = PERDUT;
-                key.ItemsKey[key.ItemsKey.Count - 1].MethodData = OLDLOST;
+                //   key.ItemsKey[key.ItemsKey.Count - 1].MethodData = OLDLOST;
+                key.ItemsKey[key.ItemsKey.Count - 1].MethodData = PERDUT;
             }
             return key;
         }

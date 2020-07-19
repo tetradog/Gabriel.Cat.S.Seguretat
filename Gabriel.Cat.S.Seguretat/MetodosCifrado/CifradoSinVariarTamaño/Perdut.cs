@@ -16,11 +16,71 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return lenghtEncrypt;
         }
+        public static Context<T> InitContextDecrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre, long inicioIn=0,long finIn=-1) where T:unmanaged
+        {
+            Context<T> context = new Context<T>();
+       
+                context.ForI =context.DataOut.Length - 1;
+            if (context.ForF < 0)
+                context.ForF =  0;
+
+            context.DataIn = data;
+            context.ForI = inicioIn;
+            if (finIn > 0)
+            {
+                context.ForF = finIn;
+                context.DataOut = new T[finIn - inicioIn];
+            }
+            else
+            {
+                context.ForF = data.Length;
+                if (inicioIn == 0)
+                    context.DataOut = new T[data.Length];
+                else context.DataOut = new T[finIn - inicioIn];
+            }
+            context.Aux = 0;
+            return context;
+        }
+        public static Context<T> InitContextEncrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre, long inicioIn = 0, long finIn = -1) where T : unmanaged
+        {
+            Context<T> context = new Context<T>();
+
+            context.ForI = 0;
+            if (context.ForF < 0)
+                context.ForF = context.DataOut.Length - 1;
+
+            context.DataIn = data;
+            context.ForI = inicioIn;
+            if (finIn > 0)
+            {
+                context.ForF = finIn;
+                context.DataOut = new T[finIn - inicioIn];
+            }
+            else
+            { 
+                context.ForF = data.Length;
+                if(inicioIn==0)
+                context.DataOut = new T[data.Length];
+                else context.DataOut = new T[finIn - inicioIn];
+            }
+            context.Aux = 0;
+            return context;
+        }
+
+        public static T[] Decrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
+        {
+            Context<T> context = InitContextDecrypt<T>(data,password,level,ordre);
+            return Decrypt(context, password, level, ordre).DataOut;
+        }
         public static Context<T> Decrypt<T>(Context<T> context, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
         {
             return ComunEncryptDecrypt(context, password, level, ordre, false);
         }
-
+        public static T[] Encrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
+        {
+            Context<T> context = InitContextEncrypt<T>(data, password, level, ordre);
+            return Encrypt(context, password, level, ordre).DataOut;
+        }
         public static Context<T> Encrypt<T>(Context<T> context, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
         {
             return ComunEncryptDecrypt(context, password, level, ordre, true);
@@ -43,10 +103,7 @@ namespace Gabriel.Cat.S.Seguretat
         {
             long posAux;
             int direccion = leftToRight ? 1 : -1;
-            if (context.ForI < 0)
-                context.ForI = leftToRight ? 0 : context.DataOut.Length - 1;
-            if (context.ForF < 0)
-                context.ForF = leftToRight ? context.DataOut.Length - 1 : 0;
+
             unsafe
             {
                 T* ptrBytesOut;

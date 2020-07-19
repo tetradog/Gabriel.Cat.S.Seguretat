@@ -39,12 +39,17 @@ namespace Gabriel.Cat.S.Seguretat
             longitud--;
             return longitud;
         }
-
-        public static byte[] Encrypt(byte[] data,byte[] password,LevelEncrypt level,Ordre ordre)
+        public static Context<byte> InitContextEncrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre ordre)
         {
             Context<byte> context = new Context<byte>();
             context.DataIn = data;
             context.DataOut = new byte[LenghtEncrtypt(context.DataIn.Length, password, level, ordre)];
+            return context;
+        }
+
+        public static byte[] Encrypt(byte[] data,byte[] password,LevelEncrypt level,Ordre ordre)
+        {
+            Context<byte> context = InitContextEncrypt(data, password, level, ordre);
             Encrypt(context, password, level, ordre);
             return context.DataOut;
         }
@@ -88,12 +93,16 @@ namespace Gabriel.Cat.S.Seguretat
 
 
         }
-
-        public static byte[] Decrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre ordre)
+        public static Context<byte> InitContextDecrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre ordre)
         {
             Context<byte> context = new Context<byte>();
             context.DataIn = data;
             context.DataOut = new byte[LenghtDecrypt(context.DataIn.Length, password, level, ordre)];
+            return context;
+        }
+        public static byte[] Decrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre ordre)
+        {
+            Context<byte> context = InitContextDecrypt(data, password, level, ordre);
             Decrypt(context, password, level, ordre);
             return context.DataOut;
         }

@@ -8,15 +8,15 @@ namespace Gabriel.Cat.S.Seguretat
 {
     public static class Perdut
     {
-        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password, LevelEncrypt level, Ordre order)
+        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password = default, LevelEncrypt level = default, Ordre order = default)
         {
             return lengthDecrypt;
         }
-        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password, LevelEncrypt level, Ordre order)
+        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password = default, LevelEncrypt level = default, Ordre order = default)
         {
             return lenghtEncrypt;
         }
-        public static Context<T> InitContextDecrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre, long inicioIn=0,long finIn=-1) where T:unmanaged
+        public static Context<T> InitContextDecrypt<T>(T[] data, byte[] password = default, LevelEncrypt level = default, Ordre ordre = default, long inicioIn=0,long finIn=-1) where T:unmanaged
         {
             Context<T> context = new Context<T>();
        
@@ -41,30 +41,9 @@ namespace Gabriel.Cat.S.Seguretat
             context.Aux = 0;
             return context;
         }
-        public static Context<T> InitContextEncrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre, long inicioIn = 0, long finIn = -1) where T : unmanaged
+        public static Context<T> InitContextEncrypt<T>(T[] data, byte[] password = default, LevelEncrypt level = default, Ordre ordre = default, long inicioIn = 0, long finIn = -1) where T : unmanaged
         {
-            Context<T> context = new Context<T>();
-
-            context.ForI = 0;
-            if (context.ForF < 0)
-                context.ForF = context.DataOut.Length - 1;
-
-            context.DataIn = data;
-            context.ForI = inicioIn;
-            if (finIn > 0)
-            {
-                context.ForF = finIn;
-                context.DataOut = new T[finIn - inicioIn];
-            }
-            else
-            { 
-                context.ForF = data.Length;
-                if(inicioIn==0)
-                context.DataOut = new T[data.Length];
-                else context.DataOut = new T[finIn - inicioIn];
-            }
-            context.Aux = 0;
-            return context;
+            return InitContextDecrypt<T>(data, password, level, ordre, inicioIn, finIn);
         }
 
         public static T[] Decrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged

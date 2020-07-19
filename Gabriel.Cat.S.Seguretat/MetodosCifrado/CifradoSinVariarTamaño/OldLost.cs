@@ -18,24 +18,23 @@ namespace Gabriel.Cat.S.Seguretat
             return lenghtEncrypt;
         }
 
-        private static unsafe byte*[] GetFilas(byte[] data, int lengthPassword)
+        private static unsafe byte*[] GetFilas(byte* ptData,int lengthData, int lengthPassword)
         {
             byte* ptrData;
             byte*[] filas;
-            int numFilas = data.Length / lengthPassword;
-            bool inCompleta = data.Length % lengthPassword != 0;
+            int numFilas = lengthData / lengthPassword;
+            bool inCompleta = lengthData % lengthPassword != 0;
             if (inCompleta)
                 numFilas++;
             filas = new byte*[numFilas];
-            fixed (byte* ptData = data)
-            {
+       
                 ptrData = ptData;
                 for (int i = 0, f = numFilas; i < f; i++)
                 {
                     filas[i] = ptrData;
                     ptrData += lengthPassword;
                 }
-            }
+            
 
             return filas;
         }
@@ -52,23 +51,19 @@ namespace Gabriel.Cat.S.Seguretat
 
             return filasDesordenadas;
         }
-        private static unsafe byte[] ReadColumn(byte*[] filas, int column, bool isComplete)
+        private static unsafe byte[] ReadColumn(byte*[] filas, int column, int length)//la longitud cambia porque no tiene por que ser exacto...
         {
             byte[] columna;
-            int numFilas = filas.Length;
 
-            if (!isComplete)
-                numFilas--;
-
-            columna = new byte[numFilas];
+            columna = new byte[length];
             for (int i = 0, f = columna.Length; i < f; i++)
                 columna[i] = filas[i][column];
 
             return columna;
         }
-        private static unsafe void WriteColumn(byte*[] filas, int column, byte* dataColumn, bool isComplete)
+        private static unsafe void WriteColumn(byte*[] filas, int column, byte* dataColumn, int length)
         {
-            for (int i = 0, f = isComplete ? filas.Length : filas.Length - 1; i < f; i++)
+            for (int i = 0; i < length; i++)
             {
                 filas[i][column] = *dataColumn;
                 dataColumn++;
@@ -101,7 +96,7 @@ namespace Gabriel.Cat.S.Seguretat
 
         public static byte[] Encrypt(byte[] data,byte[] password,LevelEncrypt level,Ordre ordre)
         {
-            bool filaCompleta;
+            int lengthFila;
             byte[] encrypted = new byte[data.Length];
             int[] posPassword = GetPositionPassword(password);
             int lineaFinalLenght = data.Length % password.Length;
@@ -113,12 +108,16 @@ namespace Gabriel.Cat.S.Seguretat
 
             unsafe
             {
-                byte*[] filas = GetFilas(data, password.Length);
-                filas = OrdenaFilasEncrypt(filas,password, level, ordre);
-                for(int i = 0; i < password.Length&&i<data.Length; i++)
+                byte*[] filas;
+                fixed (byte* ptData = data)
                 {
-                    filaCompleta = posPassword[i]!=filas.Length-1;
-                    ms.Write(ReadColumn(filas, i, filaCompleta),0, filaCompleta?length: lineaFinalLenght);
+                    filas = GetFilas(ptData, data.Length, password.Length);
+                    filas = OrdenaFilasEncrypt(filas, password, level, ordre);
+                    for (int i = 0; i < password.Length && i < data.Length; i++)
+                    {
+                        lengthFila = (posPassword[i] != filas.Length - 1)?length:lineaFinalLenght;
+                        ms.Write(ReadColumn(filas, i, lengthFila), 0, lengthFila);
+                    }
                 }
                 
             }

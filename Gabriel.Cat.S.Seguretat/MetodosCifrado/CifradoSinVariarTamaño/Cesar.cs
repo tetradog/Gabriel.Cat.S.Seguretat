@@ -9,13 +9,31 @@ namespace Gabriel.Cat.S.Seguretat
 {
    public static class Cesar
     {
-        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password, LevelEncrypt level, Ordre order)
+        public static int LenghtEncrtypt(int lengthDecrypt, byte[] password = default, LevelEncrypt level = default, Ordre order = default)
         {
             return lengthDecrypt;
         }
-        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password, LevelEncrypt level, Ordre order)
+        public static int LenghtDecrypt(int lenghtEncrypt, byte[] password = default, LevelEncrypt level = default, Ordre order = default)
         {
             return lenghtEncrypt;
+        }
+        public static Context<byte> InitContextEncrypt(byte[] data, byte[] password = default, LevelEncrypt level = default, Ordre order=default)
+        {
+            Context<byte> context = new Context<byte>();
+            context.DataIn = data;
+            context.DataOut = new byte[data.Length];
+            context.ForF = data.Length;
+            context.ForI = 0;
+
+            return context;
+        }
+        public static Context<byte> InitContextDecrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return InitContextEncrypt(data, password, level, order);
+        }
+        public static byte[] Encrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return Encrypt(InitContextEncrypt(data, password, level, order), password, level, order).DataOut;
         }
         public static Context<byte> Encrypt(Context<byte> context, byte[] password, LevelEncrypt level, Ordre order)
         {
@@ -36,6 +54,10 @@ namespace Gabriel.Cat.S.Seguretat
                 }));
             }
             return context;
+        }
+        public static byte[] Decrypt(byte[] data, byte[] password, LevelEncrypt level, Ordre order)
+        {
+            return Decrypt(InitContextDecrypt(data, password, level, order), password, level, order).DataOut;
         }
         public static Context<byte> Decrypt(Context<byte> context, byte[] password, LevelEncrypt level, Ordre order)
         {

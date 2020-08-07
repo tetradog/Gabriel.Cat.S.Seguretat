@@ -20,28 +20,27 @@ namespace Gabriel.Cat.S.Seguretat
                 MethodData = methodData;
                 MethodPassword = methodPassword;
                 if (!randomKey)
-                    Password = "";
+                    Password = null;
                 else
                     GenerateRandomKey(lenghtRandomKey);
             }
-            public ItemKey(int methodData = 0, int methodPassword = 0, string password = null) : this(methodData, methodPassword, password == null)
+            public ItemKey(int methodData = 0, int methodPassword = 0, byte[] password = null) : this(methodData, methodPassword, password == null)
             {
                 if (password != null)
                     Password = password;
             }
             public int MethodData { get; set; }
             public int MethodPassword { get; set; }
-            public string Password { get; set; }
+            public byte[] Password { get; set; }
 
             public void GenerateRandomKey(int lenght = 15)
             {
                 if (lenght < 0)
                     throw new ArgumentOutOfRangeException();
-                StringBuilder str = new StringBuilder();
-                for (int i = 0; i < lenght; i++)
-                    str.Append((char)MiRandom.Next(256));
 
-                Password = str.ToString();
+
+
+                Password = MiRandom.NextBytes(lenght);
             }
 
             public ItemKey Clon()
@@ -54,14 +53,14 @@ namespace Gabriel.Cat.S.Seguretat
             }
             public bool Equals(ItemKey other)
             {
-                return other != null && Password.Equals(other.Password) && MethodData == other.MethodData && MethodPassword == other.MethodPassword;
+                return other != null && Password.Equals(other.Password) && MethodData == other.MethodData && MethodPassword.ArrayEquals(other.MethodPassword);
             }
         }
 
 
         public class ItemEncryptationData : IClonable<ItemEncryptationData>
         {
-            public delegate byte[] MethodEncryptReversible(byte[] data, string password, bool encrypt = true);
+            public delegate byte[] MethodEncryptReversible(byte[] data, byte[] password, bool encrypt = true);
             public delegate int MethodGetLenght(int lenght);
 
             public MethodEncryptReversible MethodData { get; set; }
@@ -75,11 +74,11 @@ namespace Gabriel.Cat.S.Seguretat
                 MethodLenghtEncrypted = methodGetLenghtEncrypted;
                 LengthVariable = lenghtVariable;
             }
-            public byte[] Encrypt(byte[] data, string key)
+            public byte[] Encrypt(byte[] data, byte[] key)
             {
                 return MethodData(data, key);
             }
-            public byte[] Decrypt(byte[] data, string key)
+            public byte[] Decrypt(byte[] data, byte[] key)
             {
                 return MethodData(data, key, false);
             }
@@ -91,7 +90,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
         public class ItemEncryptationPassword : IClonable<ItemEncryptationPassword>
         {
-            public delegate string MethodEncryptNonReversible(string password);
+            public delegate string MethodEncryptNonReversible(byte[] password);
             public MethodEncryptNonReversible MethodPassword { get; set; }
             public bool LengthVariable;
             public ItemEncryptationPassword(MethodEncryptNonReversible methodPassword, bool lengthVariable)
@@ -100,7 +99,7 @@ namespace Gabriel.Cat.S.Seguretat
                 LengthVariable = lengthVariable;
 
             }
-            public string Encrypt(string key)
+            public byte[] Encrypt(byte[] key)
             {
                 return MethodPassword(key);
             }
@@ -389,23 +388,23 @@ namespace Gabriel.Cat.S.Seguretat
         }
 
 
-        public static Key GetKey(long numeroDeRandomPasswords)
+        public static Key GetKey(long numeroDeRandomPasswords,int lengthPassword=15)
         {
-            string[] randomPasswords = new string[numeroDeRandomPasswords];
+            byte[][] randomPasswords = new byte[numeroDeRandomPasswords][];
             for (long i = 0; i < numeroDeRandomPasswords; i++)
             {
-                randomPasswords[i] = (MiRandom.Next() + "").EncryptNotReverse(PasswordEncrypt.Md5);
+                randomPasswords[i] = MiRandom.NextBytes(lengthPassword);
             }
             return GetKey(randomPasswords);
 
         }
-        public static Key GetKey(params string[] passwords)
+        public static Key GetKey(params byte[] passwords)
         {
-            return GetKey((IList<string>)passwords);
+            return GetKey((IList<byte[]>)passwords);
         }
-        public static Key GetKey(IList<string> passwords)
+        public static Key GetKey(IList<byte[]> passwords)
         {
-            const int CESAR = 0, PERDUT = 1;//,OLDLOST=1;
+            const int CESAR = 0, PERDUT = 1;//,OLDLOST=2;
             if (passwords == null)
                 throw new ArgumentNullException();
 
@@ -431,26 +430,26 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return lenght;
         }
-        private static byte[] MetodoOldLost(byte[] data, string password, bool encrypt)
+        private static byte[] MetodoOldLost(byte[] data, byte[] password, bool encrypt)
         {
             return MetodoComun(data, password, encrypt, DataEncrypt.OldLost);
         }
-        private static byte[] MetodoPerdut(byte[] data, string password, bool encrypt)
+        private static byte[] MetodoPerdut(byte[] data, byte[] password, bool encrypt)
         {
             return MetodoComun(data, password, encrypt, DataEncrypt.Perdut);
         }
 
-        private static byte[] MetodoCesar(byte[] data, string password, bool encrypt)
+        private static byte[] MetodoCesar(byte[] data, byte[] password, bool encrypt)
         {
             return MetodoComun(data, password, encrypt, DataEncrypt.Cesar);
         }
 
-        private static string MetodoHash(string password)
+        private static byte[] MetodoHash(byte[] password)
         {
             return password.EncryptNotReverse();
         }
 
-        static byte[] MetodoComun(byte[] data, string password, bool encrypt, DataEncrypt metodo)
+        static byte[] MetodoComun(byte[] data, byte[] password, bool encrypt, DataEncrypt metodo)
         {
             byte[] result;
             if (encrypt)

@@ -22,10 +22,15 @@ namespace Gabriel.Cat.S.Seguretat
                 if (randomKey)
                     GenerateRandomKey(lenghtRandomKey);
             }
-            public ItemKey(int methodData = 0, int methodPassword = 0, byte[] password = null) : this(methodData, methodPassword, password == null)
+            public ItemKey(int methodData = 0, int methodPassword = 0, byte[] password = default) : this(methodData, methodPassword, Equals(password, default))
             {
                 if (password != null)
                     Password = password;
+            }
+              public ItemKey(int methodData = 0, int methodPassword = 0, string password = default) : this(methodData, methodPassword, Equals(password, default))
+            {
+                if (!Equals(password, default))
+                    Password =Serializar.GetBytes(password);
             }
             public int MethodData { get; set; }
             public int MethodPassword { get; set; }

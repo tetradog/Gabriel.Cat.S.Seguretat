@@ -19,9 +19,7 @@ namespace Gabriel.Cat.S.Seguretat
             {
                 MethodData = methodData;
                 MethodPassword = methodPassword;
-                if (!randomKey)
-                    Password = null;
-                else
+                if (randomKey)
                     GenerateRandomKey(lenghtRandomKey);
             }
             public ItemKey(int methodData = 0, int methodPassword = 0, byte[] password = null) : this(methodData, methodPassword, password == null)
@@ -398,7 +396,7 @@ namespace Gabriel.Cat.S.Seguretat
             return GetKey(randomPasswords);
 
         }
-        public static Key GetKey(params byte[] passwords)
+        public static Key GetKey(params byte[][] passwords)
         {
             return GetKey((IList<byte[]>)passwords);
         }

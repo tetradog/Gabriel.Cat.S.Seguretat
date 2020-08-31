@@ -41,10 +41,7 @@ namespace Gabriel.Cat.S.Seguretat
             context.Aux = 0;
             return context;
         }
-        public static Context<T> InitContextEncrypt<T>(T[] data, byte[] password = default, LevelEncrypt level = default, Ordre ordre = default, long inicioIn = 0, long finIn = -1) where T : unmanaged
-        {
-            return InitContextDecrypt<T>(data, password, level, ordre, inicioIn, finIn);
-        }
+
 
         public static T[] Decrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
         {
@@ -54,6 +51,11 @@ namespace Gabriel.Cat.S.Seguretat
         public static Context<T> Decrypt<T>(Context<T> context, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
         {
             return ComunEncryptDecrypt(context, password, level, ordre, false);
+        }
+
+        public static Context<T> InitContextEncrypt<T>(T[] data, byte[] password = default, LevelEncrypt level = default, Ordre ordre = default, long inicioIn = 0, long finIn = -1) where T : unmanaged
+        {
+            return InitContextDecrypt<T>(data, password, level, ordre, inicioIn, finIn);
         }
         public static T[] Encrypt<T>(T[] data, byte[] password, LevelEncrypt level, Ordre ordre) where T : unmanaged
         {
@@ -68,11 +70,13 @@ namespace Gabriel.Cat.S.Seguretat
 
         static Context<T> ComunEncryptDecrypt<T>(Context<T> context, byte[] password, LevelEncrypt level, Ordre order, bool toEncrypt) where T : unmanaged
         {
-            for (int i = context.Aux, f = (int)level + 1; i < f && context.Continua; context.Aux++)//repito el proceso como nivel de seguridad :D
+            int f = (int)level + 1;
+            for (; context.Aux < f && context.Continua; context.Aux++)//repito el proceso como nivel de seguridad :D
             {
                 TractaPerdut(context, password, level, order, toEncrypt);//si descifra ira hacia atrás
             }
-
+            if(!context.Continua)
+                 context.Aux--;
             return context;
         }
 
@@ -96,6 +100,9 @@ namespace Gabriel.Cat.S.Seguretat
                         ptrBytesOut[posAux] = ptBytesIn[context.ForI];
 
                     }
+                    //compruebo que no ha acabado de forma forzada y que no se haya acabado por casualidad (osea lo cancelan cuando acababa el proceso)
+                     if(!context.Continua&&!(leftToRight ? context.ForI <= context.ForF : context.ForI >= context.ForF))
+                          context.ForI -= direccion;
                 }
             }
 

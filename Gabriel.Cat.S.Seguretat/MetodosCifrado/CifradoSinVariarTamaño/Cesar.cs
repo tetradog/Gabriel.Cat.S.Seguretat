@@ -41,7 +41,7 @@ namespace Gabriel.Cat.S.Seguretat
             unsafe
             {
                 byte* ptrBytesOri, ptrBytesCesarEncrypt;
-                context.DataOut.UnsafeMethod((unsByteEncriptat) => context.DataOut.UnsafeMethod(unsBytes => {
+                context.DataOut.UnsafeMethod((unsByteEncriptat) => context.DataIn.UnsafeMethod(unsBytes => {
                     ptrBytesOri = unsBytes.PtrArray+context.ForI;
                     ptrBytesCesarEncrypt = unsByteEncriptat.PtrArray + context.ForI;
                     for (; context.ForI < context.DataOut.Length&&context.Continua; context.ForI++, context.Pos += 2)
@@ -66,15 +66,20 @@ namespace Gabriel.Cat.S.Seguretat
             unsafe
             {
                 byte*  ptrBytesCesarDecrypt;
+                byte*  ptrBytesCesarEncrypt;
                 context.DataOut.UnsafeMethod((unsByteDesencryptat) =>
                 {
 
+                    
+                context.DataIn.UnsafeMethod((unsByteEncryptat) =>
+                {
                     ptrBytesCesarDecrypt = unsByteDesencryptat.PtrArray+context.ForI;
+                    ptrBytesCesarEncrypt = unsByteEncryptat.PtrArray+context.ForI;
 
                     for (; context.ForI < context.DataOut.Length&&context.Continua; context.ForI++, context.Pos += 2)
                     {
                         restaCesar = EncryptDecrypt.CalculoNumeroCifrado(password, level, order, context.Pos);
-                        preByte = *ptrBytesCesarDecrypt - restaCesar;
+                        preByte = *ptrBytesCesarEncrypt - restaCesar;
 
                         if (preByte < byte.MinValue)
                         {
@@ -89,8 +94,9 @@ namespace Gabriel.Cat.S.Seguretat
                         //tengo lo que le han puesto de mas y tengo que quitarselo teniendo en cuenta que cuando llegue a 0 tiene que seguir 255
                         *ptrBytesCesarDecrypt = (byte)preByte;
                         ptrBytesCesarDecrypt++;
+                        ptrBytesCesarEncrypt++;
                     }
-                } );
+                });} );
             }
             return context;
         }

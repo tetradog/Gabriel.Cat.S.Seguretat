@@ -24,7 +24,7 @@ namespace Gabriel.Cat.S.Seguretat
             }
             public ItemKey(int methodData = 0, int methodPassword = 0, byte[] password = default) : this(methodData, methodPassword, Equals(password, default))
             {
-                if (password != null)
+                if (!Equals(password,default))
                     Password = password;
             }
               public ItemKey(int methodData = 0, int methodPassword = 0, string password = default) : this(methodData, methodPassword, Equals(password, default))
@@ -56,20 +56,20 @@ namespace Gabriel.Cat.S.Seguretat
             }
             public bool Equals(ItemKey other)
             {
-                return other != null && Password.Equals(other.Password) && MethodData == other.MethodData && MethodPassword.ArrayEquals(other.MethodPassword);
+                return !Equals(other,default) && Password.Equals(other.Password) && MethodData == other.MethodData && MethodPassword.ArrayEquals(other.MethodPassword);
             }
         }
 
 
         public class ItemEncryptationData : IClonable<ItemEncryptationData>
         {
-            public delegate byte[] MethodEncryptReversible(byte[] data, byte[] password, bool encrypt = true);
-            public delegate int MethodGetLenght(int lenght);
+            public delegate byte[] MethodEncryptReversible(byte[] data, byte[] password, bool encrypt = true,LevelEncrypt levelEncrypt=LevelEncrypt.Normal);
+            public delegate int MethodGetLenght(int lenght,LevelEncrypt levelEncrypt=LevelEncrypt.Normal);
 
             public MethodEncryptReversible MethodData { get; set; }
             public MethodGetLenght MethodLenghtEncrypted { get; set; }
             public MethodGetLenght MethodLenghtDecrypted { get; set; }
-            public bool LengthVariable;
+            public bool LengthVariable{get;set;}
             public ItemEncryptationData(MethodEncryptReversible methodData, MethodGetLenght methodGetLenghtEncrypted, MethodGetLenght methodGetLenghtDecrypted, bool lenghtVariable)
             {
                 MethodData = methodData;
@@ -95,7 +95,7 @@ namespace Gabriel.Cat.S.Seguretat
         {
             public delegate string MethodEncryptNonReversible(byte[] password);
             public MethodEncryptNonReversible MethodPassword { get; set; }
-            public bool LengthVariable;
+            public bool LengthVariable{get;set;}
             public ItemEncryptationPassword(MethodEncryptNonReversible methodPassword, bool lengthVariable)
             {
                 MethodPassword = methodPassword;
@@ -162,7 +162,7 @@ namespace Gabriel.Cat.S.Seguretat
             ItemsEncryptData.Add(new ItemEncryptationData(MetodoPerdut, GetLenghtMetodosCifradoLongitudInvariable, GetLenghtMetodosCifradoLongitudInvariable, false));
             ItemsEncryptPassword.Add(new ItemEncryptationPassword(MetodoHash, false));
         }
-        public byte[] Encrypt(byte[] data)
+        public byte[] Encrypt(byte[] data,LevelEncrypt levelEncrypt=LevelEncrypt.Normal)
         {
             ItemEncryptationData itemEncryptData;
             ItemEncryptationPassword itemEncryptPassword = null;
@@ -172,24 +172,24 @@ namespace Gabriel.Cat.S.Seguretat
                 if (ItemsEncryptPassword.Count > 0)
                     itemEncryptPassword = ItemsEncryptPassword[ItemsKey[i].MethodPassword];
 
-                data = itemEncryptData.Encrypt(data, itemEncryptPassword.Encrypt(ItemsKey[i].Password) ?? ItemsKey[i].Password);
+                data = itemEncryptData.Encrypt(data, itemEncryptPassword.Encrypt(ItemsKey[i].Password) ?? ItemsKey[i].Password,levelEncrypt);
             }
             return data;
         }
-        public string Encrypt(string data)
+        public string Encrypt(string data,LevelEncrypt levelEncrypt=LevelEncrypt.Normal)
         {
-            return Serializar.ToString(Encrypt(Serializar.GetBytes(data)));
+            return Serializar.ToString(Encrypt(Serializar.GetBytes(data),levelEncrypt));
         }
-        public IList<Bitmap> Encrypt(byte[] data,IList<Bitmap> outputBmps)
+        public IList<Bitmap> Encrypt(byte[] data,IList<Bitmap> outputBmps,LevelEncrypt levelEncryptData=LevelEncrypt.Normal,LevelEncrypt levelEncryptImage=LevelEncrypt.Normal)
         {
-            return outputBmps.SetData(Encrypt(data),LevelEncrypt.Normal);
+            return outputBmps.SetData(Encrypt(data,levelEncryptData),levelEncryptImage);
         }
-        public IList<Bitmap> Encrypt(string data, IList<Bitmap> outputBmps)
+        public IList<Bitmap> Encrypt(string data, IList<Bitmap> outputBmps,LevelEncrypt levelEncryptData=LevelEncrypt.Normal,LevelEncrypt levelEncryptImage=LevelEncrypt.Normal)
         {
-            return outputBmps.SetData(Encrypt(Serializar.GetBytes(data)), LevelEncrypt.Normal);
+            return outputBmps.SetData(Encrypt(Serializar.GetBytes(data),levelEncryptData), levelEncryptImage);
         }
   
-        public void Encrypt(FileInfo fileToEncrypt, string pathFileOut, int bufferLength = 100 * 1024)
+        public void Encrypt(FileInfo fileToEncrypt, string pathFileOut,LevelEncrypt levelEncrypt=LevelEncrypt.Normal, int bufferLength = 100 * 1024)
         {
             BinaryReader brIn = null;
             BinaryWriter bwOut = null;
@@ -214,7 +214,7 @@ namespace Gabriel.Cat.S.Seguretat
                         buffer = brIn.ReadBytes((int)(brIn.BaseStream.Length- brIn.BaseStream.Position));
 
                     bwOut.Write(buffer.Length);
-                    bwOut.Write(Encrypt(buffer));
+                    bwOut.Write(Encrypt(buffer,levelEncrypt));
 
                 } while (!brIn.BaseStream.EndOfStream());
 
@@ -232,10 +232,10 @@ namespace Gabriel.Cat.S.Seguretat
                     fsOut.Close();
             }
         }
-        public FileInfo Encrypt(FileInfo fileToEncrypt, int bufferLength = 100 * 1024)
+        public FileInfo Encrypt(FileInfo fileToEncrypt,LevelEncrypt levelEncryptData=LevelEncrypt.Normal, int bufferLength = 100 * 1024)
         {
             string pathFileEncrypted = System.IO.Path.Combine(fileToEncrypt.Directory.FullName, Path.GetFileNameWithoutExtension(fileToEncrypt.Name) + " encrypted_" + DateTime.Now.Ticks + "" + MiRandom.Next(int.MaxValue) + fileToEncrypt.Extension);
-            Encrypt(fileToEncrypt, pathFileEncrypted, bufferLength);
+            Encrypt(fileToEncrypt, pathFileEncrypted,levelEncrypt, bufferLength);
             return new FileInfo(pathFileEncrypted);
         }
         /// <summary>
@@ -243,14 +243,14 @@ namespace Gabriel.Cat.S.Seguretat
         /// </summary>
         /// <param name="keyToEncrypt"></param>
         /// <returns></returns>
-        public Key Encrypt(Key keyToEncrypt, bool siempreGenerarLaMisma = false)
+        public Key Encrypt(Key keyToEncrypt,LevelEncrypt levelEncryptData=LevelEncrypt.Normal, bool siempreGenerarLaMisma = false)
         {
             Key keyEncrypted = keyToEncrypt.Clon(siempreGenerarLaMisma);
             for (int i = 0; i < keyToEncrypt.ItemsKey.Count; i++)//si tiene algun disimulat puede variar las contraseñas es por eso que si se quiere generar la misma debe ser quitado en el clon :)
-                keyEncrypted.ItemsKey[i].Password = keyToEncrypt.Encrypt(keyEncrypted.ItemsKey[i].Password).Substring(0, keyEncrypted.ItemsKey[i].Password.Length);
+                keyEncrypted.ItemsKey[i].Password = keyToEncrypt.Encrypt(keyEncrypted.ItemsKey[i].Password,levelEncrypt).Substring(0, keyEncrypted.ItemsKey[i].Password.Length);
             return keyEncrypted;
         }
-        public byte[] Decrypt(byte[] data)
+        public byte[] Decrypt(byte[] data,LevelEncrypt levelEncryptData=LevelEncrypt.Normal)
         {
             ItemEncryptationData itemEncryptData;
             ItemEncryptationPassword itemEncryptPassword = null;
@@ -261,20 +261,20 @@ namespace Gabriel.Cat.S.Seguretat
                 if (ItemsEncryptPassword.Count > 0)
                     itemEncryptPassword = ItemsEncryptPassword[ItemsKey[i].MethodPassword];
 
-                data = itemEncryptData.Decrypt(data, itemEncryptPassword.Encrypt(ItemsKey[i].Password) ?? ItemsKey[i].Password);
+                data = itemEncryptData.Decrypt(data, itemEncryptPassword.Encrypt(ItemsKey[i].Password) ?? ItemsKey[i].Password,levelEncryptData);
             }
             return data;
         }
-        public byte[] Decrypt(IList<Bitmap> outputBmps)
+        public byte[] Decrypt(IList<Bitmap> outputBmps,LevelEncrypt levelEncryptData=LevelEncrypt.Normal,LevelEncrypt levelEncryptImage=LevelEncrypt.Normal)
         {
-            return Decrypt(outputBmps.GetData(LevelEncrypt.Normal));
+            return Decrypt(outputBmps.GetData(levelEncryptImage),levelEncryptData);
         }
-        public string Decrypt(string data)
+        public string Decrypt(string data,LevelEncrypt levelEncryptData=LevelEncrypt.Normal)
         {
-            return Serializar.ToString(Decrypt(Serializar.GetBytes(data)));
+            return Serializar.ToString(Decrypt(Serializar.GetBytes(data),levelEncryptData));
         }
 
-        public void Decrypt(FileInfo fileToDecrypt, string pathFileOut)
+        public void Decrypt(FileInfo fileToDecrypt, string pathFileOut,LevelEncrypt levelEncryptData=LevelEncrypt.Normal)
         {
             BinaryReader brIn = null;
             BinaryWriter bwOut = null;
@@ -293,7 +293,7 @@ namespace Gabriel.Cat.S.Seguretat
 
                 do
                 {
-                    bwOut.Write(Decrypt(brIn.ReadBytes(brIn.ReadInt32())));
+                    bwOut.Write(Decrypt(brIn.ReadBytes(brIn.ReadInt32()),levelEncryptData));
 
                 } while (!brIn.BaseStream.EndOfStream());
 
@@ -311,19 +311,19 @@ namespace Gabriel.Cat.S.Seguretat
                     fsOut.Close();
             }
         }
-        public FileInfo Decrypt(FileInfo fileToEncrypt)
+        public FileInfo Decrypt(FileInfo fileToEncrypt,LevelEncrypt levelEncryptData=LevelEncrypt.Normal)
         {
             string pathFileEncrypted = System.IO.Path.Combine(fileToEncrypt.Directory.FullName, Path.GetFileNameWithoutExtension(fileToEncrypt.Name) + " decrypted_" + DateTime.Now.Ticks + "" + MiRandom.Next(int.MaxValue) + fileToEncrypt.Extension);
-            Decrypt(fileToEncrypt, pathFileEncrypted);
+            Decrypt(fileToEncrypt, pathFileEncrypted,levelEncryptData);
             return new FileInfo(pathFileEncrypted);
         }
-        public int LengthEncrypt(int lengthDecrypt)
+        public int LengthEncrypt(int lengthDecrypt,LevelEncrypt levelEncryptData=LevelEncrypt.Normal)
         {
             int lenghtEncrypt;
-            lenghtEncrypt = ItemsEncryptData[ItemsKey[0].MethodData].MethodLenghtEncrypted(lengthDecrypt);
+            lenghtEncrypt = ItemsEncryptData[ItemsKey[0].MethodData].MethodLenghtEncrypted(lengthDecrypt,levelEncryptData);
             for (int i = 1; i < ItemsKey.Count; i++)
             {
-                lenghtEncrypt += ItemsEncryptData[ItemsKey[i].MethodData].MethodLenghtEncrypted(lenghtEncrypt);
+                lenghtEncrypt += ItemsEncryptData[ItemsKey[i].MethodData].MethodLenghtEncrypted(lenghtEncrypt,levelEncryptData);
             }
             return lenghtEncrypt;
         }
@@ -391,7 +391,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
 
 
-        public static Key GetKey(long numeroDeRandomPasswords,int lengthPassword=15)
+        public static Key GetKey(long numeroDeRandomPasswords,int lengthPassword=15*2)
         {
             byte[][] randomPasswords = new byte[numeroDeRandomPasswords][];
             for (long i = 0; i < numeroDeRandomPasswords; i++)
@@ -433,18 +433,18 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return lenght;
         }
-        private static byte[] MetodoOldLost(byte[] data, byte[] password, bool encrypt)
+        private static byte[] MetodoOldLost(byte[] data, byte[] password, bool encrypt,LevelEncrypt levelEncrypt)
         {
-            return MetodoComun(data, password, encrypt, DataEncrypt.OldLost);
+            return MetodoComun(data, password, encrypt, DataEncrypt.OldLost,levelEncrypt);
         }
-        private static byte[] MetodoPerdut(byte[] data, byte[] password, bool encrypt)
+        private static byte[] MetodoPerdut(byte[] data, byte[] password, bool encrypt,LevelEncrypt levelEncrypt)
         {
-            return MetodoComun(data, password, encrypt, DataEncrypt.Perdut);
+            return MetodoComun(data, password, encrypt, DataEncrypt.Perdut,levelEncrypt);
         }
 
-        private static byte[] MetodoCesar(byte[] data, byte[] password, bool encrypt)
+        private static byte[] MetodoCesar(byte[] data, byte[] password, bool encrypt,LevelEncrypt levelEncrypt)
         {
-            return MetodoComun(data, password, encrypt, DataEncrypt.Cesar);
+            return MetodoComun(data, password, encrypt, DataEncrypt.Cesar,levelEncrypt);
         }
 
         private static byte[] MetodoHash(byte[] password)
@@ -452,16 +452,16 @@ namespace Gabriel.Cat.S.Seguretat
             return password.EncryptNotReverse();
         }
 
-        static byte[] MetodoComun(byte[] data, byte[] password, bool encrypt, DataEncrypt metodo)
+        static byte[] MetodoComun(byte[] data, byte[] password, bool encrypt, DataEncrypt metodo,LevelEncrypt levelEncrypt)
         {
             byte[] result;
             if (encrypt)
             {
-                result = data.Encrypt(password, metodo, LevelEncrypt.Highest);
+                result = data.Encrypt(password, metodo, levelEncrypt);
             }
             else
             {
-                result = data.Decrypt(password, metodo, LevelEncrypt.Highest);
+                result = data.Decrypt(password, metodo, levelEncrypt);
 
             }
             return result;

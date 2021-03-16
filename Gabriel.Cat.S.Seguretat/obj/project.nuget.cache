@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "f6kpsep5Lm5JgqE0L7pZ2ZTTA9Yzyo9/xHCpxqVbZP4ScFbm4OS+QNjL8ryJgSLpLs6tM4kFMoGYyP2TP4iiMQ==",
+  "dgSpecHash": "9Dt6s/FWvCnXjG73IPxCfe9kwcWP4lddm7oQk03H6TVAl6hcxpRrWLI4izysd+af5DaXUkRjWz467Ea4vnrHkA==",
   "success": true,
   "projectFilePath": "C:\\Users\\pc\\Documents\\GitHub\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\pc\\.nuget\\packages\\gabriel.cat.s.utilitats\\1.1.5.1\\gabriel.cat.s.utilitats.1.1.5.1.nupkg.sha512",
+    "C:\\Users\\pc\\.nuget\\packages\\gabriel.cat.s.utilitats\\1.1.5.3\\gabriel.cat.s.utilitats.1.1.5.3.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",

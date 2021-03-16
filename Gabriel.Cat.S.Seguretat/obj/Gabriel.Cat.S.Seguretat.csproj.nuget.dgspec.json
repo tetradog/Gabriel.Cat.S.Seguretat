@@ -40,7 +40,7 @@
           "dependencies": {
             "Gabriel.Cat.S.Utilitats": {
               "target": "Package",
-              "version": "[1.1.5.1, )"
+              "version": "[1.1.5.3, )"
             },
             "NETStandard.Library": {
               "suppressParent": "All",

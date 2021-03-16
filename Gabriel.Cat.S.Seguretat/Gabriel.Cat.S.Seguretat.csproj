@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.1.5.1" />
+    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.1.5.3" />
   </ItemGroup>
 
 </Project>

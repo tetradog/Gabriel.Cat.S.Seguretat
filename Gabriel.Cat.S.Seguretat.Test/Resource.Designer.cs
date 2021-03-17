@@ -61,6 +61,16 @@ namespace Gabriel.Cat.S.Seguretat.Test {
         }
         
         /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Byte[].
+        /// </summary>
+        internal static byte[] grande {
+            get {
+                object obj = ResourceManager.GetObject("grande", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap imagen {

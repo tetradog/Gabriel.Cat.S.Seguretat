@@ -62,16 +62,55 @@ namespace Gabriel.Cat.S.Seguretat.Test
         [TestMethod]
         public async Task TestCesarEncryptDecryptASyncPartes()
         {
-            byte[] dataEncrypted;
-            byte[] dataDecrypted;
-            LevelEncrypt level = LevelEncrypt.Normal;
+            const int BUFFER = 1024 * 512;
+            const EncryptMethod METHOD = EncryptMethod.Cesar;
+            const LevelEncrypt LEVEL = LevelEncrypt.Normal;
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal = Serializar.GetBytes(Resource.imagen);
-            Context<byte>[] contexts = DataEncrypt.Init(dataOriginal, EncryptMethod.Cesar, true, 3024);
-            await contexts.Encrypt(password, EncryptMethod.Perdut, new StopProcess(), level);
+            await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
+        }
+        [TestMethod]
+        public async Task TestCesarEncryptDecryptASyncParte()
+        {
+            const int BUFFER = -1;
+            const EncryptMethod METHOD = EncryptMethod.Cesar;
+            const LevelEncrypt LEVEL = LevelEncrypt.Normal;
+            byte[] password = Serializar.GetBytes("password");
+            byte[] dataOriginal = Serializar.GetBytes(Resource.imagen);
+            await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
+        }
+        [TestMethod]
+        public async Task TestPerdutEncryptDecryptASyncPartesArchivoGrande()
+        {
+            const int BUFFER = 1024 * 512;
+            const EncryptMethod METHOD = EncryptMethod.Cesar;
+            const LevelEncrypt LEVEL = LevelEncrypt.Normal;
+            byte[] password = Serializar.GetBytes("password");
+            byte[] dataOriginal =Resource.grande;
+            await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
+        }
+        [TestMethod]
+        public async Task TestPerdutEncryptDecryptASyncParteArchivoGrande()
+        {
+            const int BUFFER = -1;
+            const EncryptMethod METHOD = EncryptMethod.Cesar;
+            const LevelEncrypt LEVEL = LevelEncrypt.Normal;
+            byte[] password = Serializar.GetBytes("password");
+            byte[] dataOriginal = Resource.grande;
+            await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
+        }
+        public static async Task EncryptDecryptPartesCommon(EncryptMethod method,LevelEncrypt level,byte[] password,byte[] dataOriginal, int buffer)
+        {
+
+            byte[] dataEncrypted;
+            byte[] dataDecrypted;
+
+            Context<byte>[] contexts = DataEncrypt.Init(dataOriginal, method, true, buffer);
+
+            await contexts.Encrypt(password, method, new StopProcess(), level);
             dataEncrypted = contexts.GetResult();
-            contexts = DataEncrypt.Init(dataEncrypted, EncryptMethod.Cesar, false, 3024);
-            await contexts.Decrypt(password, EncryptMethod.Cesar, new StopProcess(), level);
+            contexts = DataEncrypt.Init(dataEncrypted, method, false, buffer);
+            await contexts.Decrypt(password, method, new StopProcess(), level);
             dataDecrypted = contexts.GetResult();
 
             Assert.IsTrue(dataOriginal.AreEquals(dataDecrypted));

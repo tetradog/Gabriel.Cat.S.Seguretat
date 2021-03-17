@@ -76,11 +76,11 @@ namespace Gabriel.Cat.S.Seguretat
                 switch (method)
                 {
                     case EncryptMethod.Cesar:
-                        context.EncryptCesar(password, level, stopProcess);
+                        CesarMethod.Encrypt(context,password, level, stopProcess);
 
                         break;
                     case EncryptMethod.Perdut:
-                        context.EncryptPerdut(password, level, stopProcess);
+                        PerdutMethod.Encrypt(context,password, level, stopProcess);
 
                         break;
                 }
@@ -121,11 +121,11 @@ namespace Gabriel.Cat.S.Seguretat
                 switch (method)
                 {
                     case EncryptMethod.Cesar:
-                        context.DecryptCesar(password, level, stopProcess);
+                        CesarMethod.Decrypt(context,password, level, stopProcess);
 
                         break;
                     case EncryptMethod.Perdut:
-                        context.DecryptPerdut(password, level, stopProcess);
+                        PerdutMethod.Decrypt(context,password, level, stopProcess);
 
                         break;
                 }

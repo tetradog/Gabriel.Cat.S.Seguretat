@@ -5,7 +5,7 @@ using System.Text;
 namespace Gabriel.Cat.S.Seguretat
 
 {
-    internal unsafe delegate int MethodCesar(Context<byte> context, byte[] password, int levelEncrypt, byte* ptrInput);
+    internal unsafe delegate byte MethodCesar(Context<byte> context, byte[] password, int levelEncrypt, byte* ptrInput);
     public static class CesarMethod
     {
         const int MAX = byte.MaxValue + 1;
@@ -13,12 +13,12 @@ namespace Gabriel.Cat.S.Seguretat
         {
             return new Context<byte>
             {
-                Input = data,
-                Output = new byte[data.Length]
+                Target=nameof(CesarMethod),
+                Output = data
 
             };
         }
-        public static Context<byte> EncryptCesar(this Context<byte> context, byte[] password, LevelEncrypt level, StopProcess stopProcess)
+        public static Context<byte> Encrypt(Context<byte> context, byte[] password, LevelEncrypt level, StopProcess stopProcess)
         {
             Context<byte> result;
             unsafe 
@@ -30,25 +30,24 @@ namespace Gabriel.Cat.S.Seguretat
              static Context<byte> EncryptDecrypt( Context<byte> context,byte[] password,LevelEncrypt level,StopProcess stopProcess,MethodCesar method)
         {
             
-            int preByte;
             int levelEncrypt = (int)level;
             
 
             unsafe
             {
-                byte* ptrInput;
+
                 byte* ptrOutput;
 
-                fixed (byte* ptInput=context.Input,ptOutput=context.Output)
+                fixed (byte* ptOutput=context.Output)
                 {
-                    ptrInput = ptInput + context.InputIndex;
+
                     ptrOutput = ptOutput + context.OutputIndex;
 
-                    for (; !context.Acabado && stopProcess.Continue ; ptrInput++,ptrOutput++, context.InputIndex++, context.OutputIndex++)
+                    for (; !context.Acabado && stopProcess.Continue ;ptrOutput++, context.OutputIndex++)
                     {
-                        preByte = method(context, password, levelEncrypt, ptrInput);
+    
 
-                        *ptrOutput = (byte)(preByte % MAX);
+                        *ptrOutput = method(context, password, levelEncrypt, ptrOutput);
 
                     }
                 }
@@ -56,32 +55,36 @@ namespace Gabriel.Cat.S.Seguretat
             return context;
         }
 
-        private static unsafe int EncryptCesar(Context<byte> context, byte[] password, int levelEncrypt, byte* ptrInput)
+        private static unsafe byte EncryptCesar(Context<byte> context, byte[] password, int levelEncrypt, byte* ptrOutput)
         {
-            return *ptrInput + SumaCesar(context, password, levelEncrypt);
+            int preByte = *ptrOutput + SumaCesar(context, password, levelEncrypt);
+            if (preByte > MAX)
+            {
+                preByte %= MAX;
+            }
+            return (byte)preByte;
         }
-        private static unsafe int DecryptCesar(Context<byte> context, byte[] password, int levelEncrypt, byte* ptrInput)
+        private static unsafe byte DecryptCesar(Context<byte> context, byte[] password, int levelEncrypt, byte* ptrOutput)
         {
-            int preByte = *ptrInput - SumaCesar(context, password, levelEncrypt);
+            int preByte = *ptrOutput - SumaCesar(context, password, levelEncrypt);
 
             if (preByte < byte.MinValue)
             {
                 preByte *= -1;
                 preByte %= MAX;
                 preByte *= -1;
-                if (preByte < byte.MinValue)
-                    preByte += MAX;
+                preByte += MAX;
 
             }
-            return preByte;
+            return (byte)preByte;
         }
 
-        public static Context<byte> DecryptCesar(this Context<byte> context, byte[] password, LevelEncrypt level, StopProcess stopProcess)
+        public static Context<byte> Decrypt(Context<byte> context, byte[] password, LevelEncrypt level, StopProcess stopProcess)
         {
             Context<byte> result;
             unsafe
             {
-                result = EncryptDecrypt(context, password, level, stopProcess, EncryptCesar);
+                result = EncryptDecrypt(context, password, level, stopProcess, DecryptCesar);
             }
             return result;
         }

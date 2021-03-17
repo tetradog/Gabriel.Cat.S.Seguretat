@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "NMSJbAmg30YnRuzLTYBGgOMo/Eo43BlUsYWxnOBeCoZCciorEt04yLzlblc5jm6c8cSTzmIFyYXzZvyqVhRCPA==",
+  "dgSpecHash": "H7tSHsIi7Xi5Ljqj8EGO+E9newv4wd1PnyhesWAxmLVf0A/yXXx+6AtEMuNDhCIs2Nb7qFMx7la5pGkDEqRc1w==",
   "success": true,
   "projectFilePath": "C:\\Users\\pc\\Documents\\GitHub\\Gabriel.Cat.S.Seguretat\\Gabriel.Cat.S.Seguretat.Test\\Gabriel.Cat.S.Seguretat.Test.csproj",
   "expectedPackageFiles": [
@@ -70,6 +70,7 @@
     "C:\\Users\\pc\\.nuget\\packages\\system.reflection.extensions\\4.3.0\\system.reflection.extensions.4.3.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\system.reflection.primitives\\4.3.0\\system.reflection.primitives.4.3.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\system.reflection.typeextensions\\4.3.0\\system.reflection.typeextensions.4.3.0.nupkg.sha512",
+    "C:\\Users\\pc\\.nuget\\packages\\system.resources.extensions\\5.0.0\\system.resources.extensions.5.0.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\system.resources.resourcemanager\\4.3.0\\system.resources.resourcemanager.4.3.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\system.runtime\\4.3.0\\system.runtime.4.3.0.nupkg.sha512",
     "C:\\Users\\pc\\.nuget\\packages\\system.runtime.extensions\\4.3.0\\system.runtime.extensions.4.3.0.nupkg.sha512",

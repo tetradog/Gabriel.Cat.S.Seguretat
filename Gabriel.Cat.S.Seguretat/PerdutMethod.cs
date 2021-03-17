@@ -5,65 +5,61 @@ using System.Text;
 
 namespace Gabriel.Cat.S.Seguretat
 {
-    internal delegate int IndexPerdutMethod<T>(Context<T> data, byte[] password, int level) where T:unmanaged;
+    internal delegate long IndexPerdutMethod<T>(Context<T> data, byte[] password, int level);
     public static class PerdutMethod
     {
-        public static Context<T> InitPerdut<T>(this T[] data,bool encryptOrDecrypt=true) where T:unmanaged
+        public static Context<T> InitPerdut<T>(this T[] data,bool encryptOrDecrypt=false)
         {
             return new Context<T>
             {
-                Input=data,
-                Output=data.Convert((i)=>i),
-                OutputIndex=encryptOrDecrypt?0:data.Length-1
+                Target = nameof(PerdutMethod),
+                Output=data
             };
         }
-        public static Context<T> EncryptPerdut<T>(this Context<T> data, byte[] password, LevelEncrypt level, StopProcess stopProcess=null) where T : unmanaged
+        public static Context<T> Encrypt<T>(Context<T> data, byte[] password, LevelEncrypt level, StopProcess stopProcess=null)
         {
-            return DecryptEncrypt(data, password, stopProcess, level, IndexPerdutEncrypt, true);
+            return DecryptEncrypt(data, password, stopProcess, level, IndexPerdutEncrypt);
         }
-        public static Context<T> DecryptPerdut<T>(this Context<T> data, byte[] password, LevelEncrypt level, StopProcess stopProcess=null ) where T : unmanaged
+        public static Context<T> Decrypt<T>(Context<T> data, byte[] password, LevelEncrypt level, StopProcess stopProcess=null ) 
         {
-            return DecryptEncrypt(data, password, stopProcess, level, IndexPerdutDecrypt, false);
+            return DecryptEncrypt(data, password, stopProcess, level, IndexPerdutDecrypt);
         }
-        static Context<T> DecryptEncrypt<T>(this Context<T> data,byte[] password,StopProcess stopProcess,LevelEncrypt level,IndexPerdutMethod<T> metodo,bool encryptOrDecrypt) where T:unmanaged
+        static Context<T> DecryptEncrypt<T>(Context<T> data,byte[] password,StopProcess stopProcess,LevelEncrypt level,IndexPerdutMethod<T> metodoObtenerIndexOutput)
         {
             T aux;
-            int index;
+            long index;
             int levelEncrypt = (int)level;
-            int suma = encryptOrDecrypt ? 1 : -1;
+
+
             if(Equals(stopProcess,null))
             {
                 stopProcess = new StopProcess();
             }
-            unsafe
-            {
-                T* ptrIn, ptrOut;
-                fixed(T* ptIn = data.Input, ptOut = data.Output)
-                {
-                    ptrIn = ptIn + data.InputIndex;
-                    ptrOut = ptOut + data.OutputIndex;
-                    for(;!data.Acabado && stopProcess.Continue; data.OutputIndex+=suma)
-                    {
-                        index = metodo(data, password, levelEncrypt);
-                        aux = data.Output[index];
-                        data.Output[index] = data.Output[data.OutputIndex];
-                        data.Output[data.OutputIndex] = aux;
-                    }
-                }
 
+            for (; !data.Acabado && stopProcess.Continue; data.OutputIndex++)
+            {
+                index = metodoObtenerIndexOutput(data, password, levelEncrypt);
+                aux = data.Output[index];
+                data.Output[index] = data.Output[data.OutputIndex];
+                data.Output[data.OutputIndex] = aux;
 
             }
 
             return data;
         }
 
-        static int IndexPerdutEncrypt<T>(Context<T> context,byte[] password,int level) where T:unmanaged
+        static long IndexPerdutEncrypt<T>(Context<T> context,byte[] password,int level) 
         {
-            return 0;
+
+            return (context.OutputIndex + SumaIndex(context, password, level)) % context.Output.Length;
         }
-        static int IndexPerdutDecrypt<T>(Context<T> context, byte[] password, int level) where T : unmanaged
+        static int SumaIndex<T>(Context<T> context,byte[] password,int level)
         {
-            return 0;
+            return password[(context.OutputIndex * level) % password.Length] * level;
+        }
+        static long IndexPerdutDecrypt<T>(Context<T> context, byte[] password, int level) 
+        {
+            return context.Output.Length-(context.OutputIndex - SumaIndex(context, password, level) % context.Output.Length);
         }
 
     }

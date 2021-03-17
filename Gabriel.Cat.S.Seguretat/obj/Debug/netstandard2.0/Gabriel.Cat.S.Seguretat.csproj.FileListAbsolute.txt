@@ -4,3 +4,6 @@ C:\Users\pc\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\obj
 C:\Users\pc\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\obj\Debug\netstandard2.0\Gabriel.Cat.S.Seguretat.AssemblyInfoInputs.cache
 C:\Users\pc\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\obj\Debug\netstandard2.0\Gabriel.Cat.S.Seguretat.AssemblyInfo.cs
 C:\Users\pc\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\obj\Debug\netstandard2.0\Gabriel.Cat.S.Seguretat.csproj.CoreCompileInputs.cache
+C:\Users\pc\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\bin\Debug\netstandard2.0\Gabriel.Cat.S.Seguretat.pdb
+C:\Users\pc\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\obj\Debug\netstandard2.0\Gabriel.Cat.S.Seguretat.dll
+C:\Users\pc\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\obj\Debug\netstandard2.0\Gabriel.Cat.S.Seguretat.pdb

@@ -9,43 +9,68 @@ namespace Gabriel.Cat.S.Seguretat
     public static class CesarMethod
     {
         const int MAX = byte.MaxValue + 1;
-        public static Context<byte> InitCesar(this byte[] data, bool encryptOrDecrypt=false)
+
+        public static Context<byte> Encrypt(byte[] data, byte[] password, LevelEncrypt level, StopProcess stopProcess = null)
         {
-            return new Context<byte>
+            return EncryptDecrypt(data, password, true, stopProcess, level);
+        }
+        public static Context<byte> Decrypt(byte[] data, byte[] password, LevelEncrypt level, StopProcess stopProcess = null)
+        {
+            return EncryptDecrypt(data, password, false, stopProcess, level);
+        }
+        static Context<byte> EncryptDecrypt(byte[] data, byte[] password, bool encryptOrDecrypt = false, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal)
+        {
+            Context<byte> context = new Context<byte>
             {
-                Target=nameof(CesarMethod),
+                Target = nameof(CesarMethod),
                 Output = data
 
             };
+            if (encryptOrDecrypt)
+            {
+                Encrypt(context, password, level, stopProcess);
+            }
+            else
+            {
+                Decrypt(context, password, level, stopProcess);
+            }
+            return context;
         }
-        public static Context<byte> Encrypt(Context<byte> context, byte[] password, LevelEncrypt level, StopProcess stopProcess)
+        public static Context<byte> Encrypt(Context<byte> context, byte[] password, LevelEncrypt level, StopProcess stopProcess = null)
         {
             Context<byte> result;
-            unsafe 
-            { 
-                result = EncryptDecrypt(context, password, level, stopProcess, EncryptCesar); 
+            unsafe
+            {
+                result = EncryptDecrypt(context, password, level, EncryptCesar, stopProcess);
             }
             return result;
         }
-             static Context<byte> EncryptDecrypt( Context<byte> context,byte[] password,LevelEncrypt level,StopProcess stopProcess,MethodCesar method)
+        static Context<byte> EncryptDecrypt(Context<byte> context, byte[] password, LevelEncrypt level, MethodCesar method, StopProcess stopProcess = null)
         {
-            
+
             int levelEncrypt = (int)level;
-            
+            if (Equals(stopProcess, default))
+            {
+                stopProcess = new StopProcess();
+            }
+            else
+            {
+                stopProcess.Continue = true;
+            }
 
             unsafe
             {
 
                 byte* ptrOutput;
 
-                fixed (byte* ptOutput=context.Output)
+                fixed (byte* ptOutput = context.Output)
                 {
 
                     ptrOutput = ptOutput + context.OutputIndex;
 
-                    for (; !context.Acabado && stopProcess.Continue ;ptrOutput++, context.OutputIndex++)
+                    for (; !context.Acabado && stopProcess.Continue; ptrOutput++, context.OutputIndex++)
                     {
-    
+
 
                         *ptrOutput = method(context, password, levelEncrypt, ptrOutput);
 
@@ -84,15 +109,15 @@ namespace Gabriel.Cat.S.Seguretat
             Context<byte> result;
             unsafe
             {
-                result = EncryptDecrypt(context, password, level, stopProcess, DecryptCesar);
+                result = EncryptDecrypt(context, password, level, DecryptCesar, stopProcess);
             }
             return result;
         }
 
-      
-        static int SumaCesar(Context<byte> context,byte[] password, int levelEncrypt)
+
+        static int SumaCesar(Context<byte> context, byte[] password, int levelEncrypt)
         {
-            return password[context.InputIndex%password.Length]*levelEncrypt;
+            return password[context.InputIndex % password.Length] * levelEncrypt;
         }
     }
 }

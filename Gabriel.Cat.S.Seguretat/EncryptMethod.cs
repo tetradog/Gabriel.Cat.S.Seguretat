@@ -2,6 +2,6 @@
 {
     public enum EncryptMethod
     {
-        Cesar,Perdut
+        Cesar,Perdut,DisimulatRandom,Disimulat
     }
 }

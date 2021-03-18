@@ -8,13 +8,30 @@ namespace Gabriel.Cat.S.Seguretat
     internal delegate long IndexPerdutMethod<T>(Context<T> data, byte[] password, int level);
     public static class PerdutMethod
     {
-        public static Context<T> InitPerdut<T>(this T[] data,bool encryptOrDecrypt=false)
+        public static Context<T> Encrypt<T>( T[] data, byte[] password, LevelEncrypt level, StopProcess stopProcess = null)
         {
-            return new Context<T>
+            return EncryptDecrypt(data,password, true,  stopProcess, level);
+        }
+        public static Context<T> Decrypt<T>( T[] data, byte[] password, LevelEncrypt level, StopProcess stopProcess = null)
+        {
+            return EncryptDecrypt(data,password, false,  stopProcess, level);
+        }
+         static Context<T> EncryptDecrypt<T>( T[] data, byte[] password, bool encryptOrDecrypt = false, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal)
+        {
+            Context<T> context= new Context<T>
             {
                 Target = nameof(PerdutMethod),
-                Output=data
+                Output = data
             };
+            if (encryptOrDecrypt)
+            {
+                Encrypt(context, password, level, stopProcess);
+            }
+            else
+            {
+                Decrypt(context, password, level, stopProcess);
+            }
+            return context;
         }
         public static Context<T> Encrypt<T>(Context<T> data, byte[] password, LevelEncrypt level, StopProcess stopProcess=null)
         {
@@ -34,6 +51,10 @@ namespace Gabriel.Cat.S.Seguretat
             if(Equals(stopProcess,null))
             {
                 stopProcess = new StopProcess();
+            }
+            else
+            {
+                stopProcess.Continue = true;
             }
 
             for (; !data.Acabado && stopProcess.Continue; data.OutputIndex++)

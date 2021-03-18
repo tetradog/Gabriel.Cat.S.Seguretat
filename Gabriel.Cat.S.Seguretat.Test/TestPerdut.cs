@@ -20,11 +20,9 @@ namespace Gabriel.Cat.S.Seguretat.Test
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal =Serializar.GetBytes(Resource.imagen);
             
-            Context<byte> context = PerdutMethod.InitPerdut(dataOriginal);
-            PerdutMethod.Encrypt(context,password, level, new StopProcess());
+            Context<byte> context = PerdutMethod.Encrypt(dataOriginal,password, level);
             dataEncrypted = context.Output;
-            context = PerdutMethod.InitPerdut(dataEncrypted);
-            PerdutMethod.Decrypt(context,password,level,new StopProcess());
+            context = PerdutMethod.Decrypt(dataEncrypted, password, level);
             Assert.IsTrue(dataOriginal.AreEquals(context.Output));
 
 
@@ -33,18 +31,19 @@ namespace Gabriel.Cat.S.Seguretat.Test
         public async Task TestPerdutEncryptDecryptASync()
         {
             byte[] dataEncrypted;
-
+            Task task;
             LevelEncrypt level = LevelEncrypt.Normal;
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal = Serializar.GetBytes(Resource.imagen);
-            StopProcess stopProcess = new StopProcess();
-            Context<byte> context = PerdutMethod.InitPerdut(dataOriginal);
+            StopProcess stopProcess = new StopProcess() { Continue = false };
+            Context<byte> context = PerdutMethod.Encrypt(dataOriginal, password, level, stopProcess);
             Action act = () =>
             {
                 while(!context.Acabado)
                     PerdutMethod.Encrypt(context, password, level, stopProcess);
             };
-            Task task = Task.Run(act);
+            stopProcess.Continue = true;
+            task = Task.Run(act);
 
             task.Wait(150);
             stopProcess.Continue = false;
@@ -53,8 +52,8 @@ namespace Gabriel.Cat.S.Seguretat.Test
             await task;
           
             dataEncrypted = context.Output;
-            context = PerdutMethod.InitPerdut(dataEncrypted);
-            PerdutMethod.Decrypt(context, password, level, stopProcess);
+            context = PerdutMethod.Decrypt(dataEncrypted, password, level, stopProcess);
+
             Assert.IsTrue(dataOriginal.AreEquals(context.Output));
 
 

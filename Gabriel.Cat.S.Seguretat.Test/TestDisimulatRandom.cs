@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 namespace Gabriel.Cat.S.Seguretat.Test
 {
     [TestClass]
-    public class Cesar
+    public class DisimulatRandom
     {
         [TestMethod]
-        public void TestCesarEncryptDecryptSync()
+        public void TestDisimulatRandomEncryptDecryptSync()
         {
             byte[] dataEncrypted;
 
@@ -20,17 +20,15 @@ namespace Gabriel.Cat.S.Seguretat.Test
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal =Serializar.GetBytes(Resource.imagen);
             
-            Context<byte> context = CesarMethod.Encrypt(dataOriginal, password, level);
-  
+            Context<byte> context = DisimulatRandomMethod.Encrypt(dataOriginal,password, level);
             dataEncrypted = context.Output;
-            context = CesarMethod.Decrypt(dataEncrypted, password, level);
-
+            context = DisimulatRandomMethod.Decrypt(dataEncrypted, password, level);
             Assert.IsTrue(dataOriginal.AreEquals(context.Output));
 
 
         }
         [TestMethod]
-        public async Task TestCesarEncryptDecryptASync()
+        public async Task TestDisimulatRandomEncryptDecryptASync()
         {
             byte[] dataEncrypted;
             Task task;
@@ -38,11 +36,11 @@ namespace Gabriel.Cat.S.Seguretat.Test
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal = Serializar.GetBytes(Resource.imagen);
             StopProcess stopProcess = new StopProcess() { Continue = false };
-            Context<byte> context = CesarMethod.Encrypt(dataOriginal, password, level, stopProcess);
+            Context<byte> context = DisimulatRandomMethod.Encrypt(dataOriginal, password, level, stopProcess);
             Action act = () =>
             {
                 while(!context.Acabado)
-                  CesarMethod.Encrypt(context, password, level, stopProcess);
+                    DisimulatRandomMethod.Encrypt(context, password, level, stopProcess);
             };
             stopProcess.Continue = true;
             task = Task.Run(act);
@@ -54,65 +52,51 @@ namespace Gabriel.Cat.S.Seguretat.Test
             await task;
           
             dataEncrypted = context.Output;
-            context = CesarMethod.Decrypt(dataEncrypted, password, level, stopProcess);
+            context = DisimulatRandomMethod.Decrypt(dataEncrypted, password, level, stopProcess);
 
             Assert.IsTrue(dataOriginal.AreEquals(context.Output));
 
 
         }
         [TestMethod]
-        public async Task TestCesarEncryptDecryptASyncPartes()
+        public async Task TestDisimulatRandomEncryptDecryptASyncPartes()
         {
             const int BUFFER = 1024 * 512;
-            const EncryptMethod METHOD = EncryptMethod.Cesar;
+            const EncryptMethod METHOD = EncryptMethod.DisimulatRandom;
             const LevelEncrypt LEVEL = LevelEncrypt.Normal;
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal = Serializar.GetBytes(Resource.imagen);
             await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
         }
         [TestMethod]
-        public async Task TestCesarEncryptDecryptASyncParte()
+        public async Task TestDisimulatRandomEncryptDecryptASyncParte()
         {
             const int BUFFER = -1;
-            const EncryptMethod METHOD = EncryptMethod.Cesar;
+            const EncryptMethod METHOD = EncryptMethod.DisimulatRandom;
             const LevelEncrypt LEVEL = LevelEncrypt.Normal;
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal = Serializar.GetBytes(Resource.imagen);
             await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
         }
         [TestMethod]
-        public async Task TestPerdutEncryptDecryptASyncPartesArchivoGrande()
+        public async Task TestDisimulatRandomEncryptDecryptASyncPartesArchivoGrande()
         {
             const int BUFFER = 1024 * 512;
-            const EncryptMethod METHOD = EncryptMethod.Cesar;
-            const LevelEncrypt LEVEL = LevelEncrypt.Normal;
-            byte[] password = Serializar.GetBytes("password");
-            byte[] dataOriginal =Resource.grande;
-            await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
-        }
-        [TestMethod]
-        public async Task TestPerdutEncryptDecryptASyncParteArchivoGrande()
-        {
-            const int BUFFER = -1;
-            const EncryptMethod METHOD = EncryptMethod.Cesar;
+            const EncryptMethod METHOD = EncryptMethod.DisimulatRandom;
             const LevelEncrypt LEVEL = LevelEncrypt.Normal;
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal = Resource.grande;
             await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
         }
-        public static async Task EncryptDecryptPartesCommon(EncryptMethod method,LevelEncrypt level,byte[] password,byte[] dataOriginal, int buffer)
+        [TestMethod]
+        public async Task TestDisimulatRandomEncryptDecryptASyncParteArchivoGrande()
         {
-
-            byte[] dataEncrypted;
-            byte[] dataDecrypted;
-
-            Context<byte>[] contexts  = await DataEncrypt.Encrypt(dataOriginal,password,method,buffer,null,level);
-
-            dataEncrypted = contexts.GetResult();
-            contexts = await DataEncrypt.Decrypt(dataEncrypted, password, method, buffer, null, level);
-            dataDecrypted = contexts.GetResult();
-
-            Assert.IsTrue(dataOriginal.AreEquals(dataDecrypted));
+            const int BUFFER = -1;
+            const EncryptMethod METHOD = EncryptMethod.DisimulatRandom;
+            const LevelEncrypt LEVEL = LevelEncrypt.Normal;
+            byte[] password = Serializar.GetBytes("password");
+            byte[] dataOriginal = Resource.grande;
+            await Cesar.EncryptDecryptPartesCommon(METHOD, LEVEL, password, dataOriginal, BUFFER);
         }
     }
 }

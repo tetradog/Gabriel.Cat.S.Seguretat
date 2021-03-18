@@ -39,11 +39,11 @@ namespace Gabriel.Cat.S.Seguretat
                 aux = data.SubArray(i * buffer, buffer);
                 if (encryptOrDecrypt)
                 {
-                    contexts[i] = Encrypt(aux, password, method, stopProcess, level);
+                    contexts[i] = Encrypt(aux, password, method, level, stopProcess);
                 }
                 else
                 {
-                    contexts[i] = Decrypt(aux, password, method, stopProcess, level);
+                    contexts[i] = Decrypt(aux, password, method, level, stopProcess);
                 }
                 
             }
@@ -82,7 +82,7 @@ namespace Gabriel.Cat.S.Seguretat
             Task[] tasks = new Task[contexts.Count];
             for(int i = 0; i < contexts.Count; i++)
             {
-                tasks[i] = Encrypt(contexts[i],password, method, stopProcess, level);
+                tasks[i] = Encrypt(contexts[i],password, method, level, stopProcess);
             }
 
             await Task.WhenAll(tasks);
@@ -184,7 +184,7 @@ namespace Gabriel.Cat.S.Seguretat
             Task[] tasks = new Task[contexts.Count];
             for (int i = 0; i < contexts.Count; i++)
             {
-                tasks[i] = Decrypt(contexts[i],password, method, stopProcess, level);
+                tasks[i] = Decrypt(contexts[i],password, method, level, stopProcess);
             }
 
             await Task.WhenAll(tasks);

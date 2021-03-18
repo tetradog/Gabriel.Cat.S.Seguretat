@@ -14,5 +14,5 @@ namespace Gabriel.Cat.S.Seguretat.Test
     {
         public DisimulatRandom() : base(EncryptMethod.DisimulatRandom) { }
     }
-}
+
 }

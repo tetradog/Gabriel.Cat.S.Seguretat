@@ -8,11 +8,11 @@ namespace Gabriel.Cat.S.Seguretat
 {
     public static class DataEncrypt
     {
-        public static async Task<Context<byte>[]> Encrypt(byte[] data, byte[] password, EncryptMethod method, int buffer, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal )
+        public static async Task<Context<byte>[]> Encrypt(byte[] data, byte[] password, EncryptMethod method, int buffer, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess = null)
         {
             return await EncryptDecrypt(data, password, stopProcess, method, level, true, buffer);
         }
-        public static async Task<Context<byte>[]> Decrypt(byte[] data, byte[] password, EncryptMethod method, int buffer, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal)
+        public static async Task<Context<byte>[]> Decrypt(byte[] data, byte[] password, EncryptMethod method, int buffer, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess = null)
         {
             return await EncryptDecrypt(data, password, stopProcess, method, level, false, buffer);
         }
@@ -68,7 +68,7 @@ namespace Gabriel.Cat.S.Seguretat
             }
             return result;
         }
-        public static async Task<IList<Context<byte>>> Encrypt(this IList<Context<byte>> contexts, byte[] password, EncryptMethod method, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal) 
+        public static async Task<IList<Context<byte>>> Encrypt(this IList<Context<byte>> contexts, byte[] password, EncryptMethod method, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess = null) 
         {
             if (Equals(stopProcess, default))
             {
@@ -88,7 +88,7 @@ namespace Gabriel.Cat.S.Seguretat
             await Task.WhenAll(tasks);
             return contexts;
         }
-        public static async Task<Context<byte>> Encrypt(byte[] data, byte[] password, EncryptMethod method, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal)
+        public static async Task<Context<byte>> Encrypt(byte[] data, byte[] password, EncryptMethod method, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess = null)
         {
             if (Equals(stopProcess, default))
             {
@@ -130,7 +130,7 @@ namespace Gabriel.Cat.S.Seguretat
 
 
         }
-        public static async Task<Context<byte>> Encrypt( Context<byte> context, byte[] password,EncryptMethod method,StopProcess stopProcess=null,LevelEncrypt level = LevelEncrypt.Normal)
+        public static async Task<Context<byte>> Encrypt( Context<byte> context, byte[] password,EncryptMethod method, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess=null)
         {
             if (Equals(stopProcess, default))
             {
@@ -170,7 +170,7 @@ namespace Gabriel.Cat.S.Seguretat
 
 
         }
-        public static async Task<IList<Context<byte>>> Decrypt(this IList<Context<byte>> contexts, byte[] password, EncryptMethod method, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal)
+        public static async Task<IList<Context<byte>>> Decrypt(this IList<Context<byte>> contexts, byte[] password, EncryptMethod method, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess = null)
         {
             if (Equals(stopProcess, default))
             {
@@ -190,7 +190,7 @@ namespace Gabriel.Cat.S.Seguretat
             await Task.WhenAll(tasks);
             return contexts;
         }
-        public static async Task<Context<byte>> Decrypt(byte[] data, byte[] password, EncryptMethod method, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal)
+        public static async Task<Context<byte>> Decrypt(byte[] data, byte[] password, EncryptMethod method, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess = null)
         {
             if (Equals(stopProcess, default))
             {
@@ -231,7 +231,7 @@ namespace Gabriel.Cat.S.Seguretat
 
         }
 
-        public static async Task<Context<byte>> Decrypt( Context<byte> context, byte[] password, EncryptMethod method, StopProcess stopProcess = null, LevelEncrypt level = LevelEncrypt.Normal)
+        public static async Task<Context<byte>> Decrypt( Context<byte> context, byte[] password, EncryptMethod method, LevelEncrypt level = LevelEncrypt.Normal, StopProcess stopProcess = null)
         {
             if (Equals(stopProcess, default))
             {

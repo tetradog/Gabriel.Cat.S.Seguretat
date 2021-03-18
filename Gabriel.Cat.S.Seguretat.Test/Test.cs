@@ -63,9 +63,9 @@ namespace Gabriel.Cat.S.Seguretat.Test
 
         }
         [TestMethod]
-        public async Task TestCesarEncryptDecryptASyncPartes()
+        public async Task TestEncryptDecryptASyncPartes()
         {
-            const int BUFFER = 1024 * 512;
+            const int BUFFER = 1024 * 1;
 
             const LevelEncrypt LEVEL = LevelEncrypt.Normal;
             byte[] password = Serializar.GetBytes("password");
@@ -73,7 +73,7 @@ namespace Gabriel.Cat.S.Seguretat.Test
             await EncryptDecryptPartesCommon(LEVEL, password, dataOriginal, BUFFER);
         }
         [TestMethod]
-        public async Task TestCesarEncryptDecryptASyncParte()
+        public async Task TestEncryptDecryptASyncParte()
         {
             const int BUFFER = -1;
 
@@ -83,25 +83,16 @@ namespace Gabriel.Cat.S.Seguretat.Test
             await EncryptDecryptPartesCommon( LEVEL, password, dataOriginal, BUFFER);
         }
         [TestMethod]
-        public async Task TestPerdutEncryptDecryptASyncPartesArchivoGrande()
+        public async Task TestEncryptDecryptASyncPartesArchivoGrande()
         {
-            const int BUFFER = 1024 * 512;
+            const int BUFFER = 1024 * 1;
             const LevelEncrypt LEVEL = LevelEncrypt.Normal;
             byte[] password = Serializar.GetBytes("password");
             byte[] dataOriginal =Resource.grande;
             await EncryptDecryptPartesCommon(LEVEL, password, dataOriginal, BUFFER);
         }
-        [TestMethod]
-        public async Task TestPerdutEncryptDecryptASyncParteArchivoGrande()
-        {
-            const int BUFFER = -1;
 
-            const LevelEncrypt LEVEL = LevelEncrypt.Normal;
-            byte[] password = Serializar.GetBytes("password");
-            byte[] dataOriginal = Resource.grande;
-            await EncryptDecryptPartesCommon( LEVEL, password, dataOriginal, BUFFER);
-        }
-        public  async Task EncryptDecryptPartesCommon(LevelEncrypt level,byte[] password,byte[] dataOriginal, int buffer)
+         async Task EncryptDecryptPartesCommon(LevelEncrypt level,byte[] password,byte[] dataOriginal, int buffer)
         {
 
             byte[] dataEncrypted;

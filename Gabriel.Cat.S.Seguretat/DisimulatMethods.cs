@@ -33,11 +33,12 @@ namespace Gabriel.Cat.S.Seguretat
 
             int randomTrush;
             int levelEncrypt = (int)level;
+            
 
             for (; !context.Acabado && stopProcess.Continue; context.InputIndex++)
             {
                 //pongo random
-                randomTrush = password[context.InputIndex % password.Length] * levelEncrypt;
+                randomTrush = CalculoTrash(context.InputIndex, password, levelEncrypt);
                 for (int i = 0; i < randomTrush; i++)
                 {
                     context.Output[context.OutputIndex] = (byte)MiRandom.Next(min, max);
@@ -47,6 +48,16 @@ namespace Gabriel.Cat.S.Seguretat
                 context.Output[context.OutputIndex] = context.Input[context.InputIndex];
                 context.OutputIndex++;
 
+            }
+            if(!context.Acabado && stopProcess.Continue)
+            {
+                //pongo random para tapar el último byte
+                randomTrush = CalculoTrash(context.InputIndex, password, levelEncrypt);
+                for (int i = 0; i < randomTrush; i++)
+                {
+                    context.Output[context.OutputIndex] = (byte)MiRandom.Next(min, max);
+                    context.OutputIndex++;
+                }
             }
 
             return context;
@@ -76,11 +87,12 @@ namespace Gabriel.Cat.S.Seguretat
             }
             int randomTrush;
             int levelEncrypt = (int)level;
+            long lengthOutput = context.Output.Length;
 
-            for (; !context.Acabado && stopProcess.Continue; context.OutputIndex++)
+            for (; context.OutputIndex<lengthOutput && stopProcess.Continue; context.OutputIndex++)
             {
                 //quito random
-                randomTrush = password[context.OutputIndex % password.Length] * levelEncrypt;
+                randomTrush = CalculoTrash(context.OutputIndex, password, levelEncrypt);
                 context.InputIndex += randomTrush;
                 //pongo data
                 context.Output[context.OutputIndex] = context.Input[context.InputIndex];
@@ -88,16 +100,21 @@ namespace Gabriel.Cat.S.Seguretat
             }
             return context;
         }
+        static int CalculoTrash(long pos,byte[] password,int levelEncrypt)
+        {
+            const int POWER = 1;//es un nombre cualquiera
+            return password[pos % password.Length] + levelEncrypt*POWER;
+        }
         internal static int GetLengthEncrypted(int lengthOriginal, byte[] password, LevelEncrypt level)
         {
             int levelEncrypt = (int)level;
             int longitudArray = lengthOriginal;
-            int pos = 0;
-            for (int i = 0, f = lengthOriginal; i <= f; i++)
+            //le añado uno porque así el ultimo byte no queda expuesto
+            for (int i = 0, f = lengthOriginal+1; i <= f; i++)
             {
-                longitudArray += password[pos % password.Length] * levelEncrypt;
+                longitudArray += CalculoTrash(i, password, levelEncrypt);
 
-                pos += 2;
+              
             }
             return longitudArray;
 
@@ -112,14 +129,14 @@ namespace Gabriel.Cat.S.Seguretat
             while (longitudAux > 0)
             {
                 //le resto los caracteres random
-                longitudAux -= password[pos % password.Length] * levelEncrypt;
+                longitudAux -= CalculoTrash(pos, password, levelEncrypt);
                 //quito el caracter original
                 longitudAux--;
                 //lo cuento
                 longitud++;
-                pos += 2;
+                pos ++;
             }
-            longitud--;
+            longitud--;//como el ultimo byte esta protegido por basura después de él pues se cuenta otro byte de más
             return longitud;
         }
     }

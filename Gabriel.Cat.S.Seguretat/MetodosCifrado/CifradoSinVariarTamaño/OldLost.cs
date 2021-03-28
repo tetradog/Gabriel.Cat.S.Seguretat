@@ -22,7 +22,7 @@ namespace Gabriel.Cat.S.Seguretat
            T[] dataEncryptada=new T[dataOriginal.Length];
            int[] posciones=GetPosiciones(password,level,order);
 
-           for(int i=0,pos=0,inicioFila;i<dataOriginal.Length;i++){
+           for(int i=0,pos=0,inicioFila=0;i<dataOriginal.Length;i++){
                 if(pos==0)
                   inicioFila=i;
                dataEncryptada[i]=dataOriginal[posciones[pos]+inicioFila];
@@ -36,14 +36,14 @@ namespace Gabriel.Cat.S.Seguretat
             T[] dataDecrypted=new T[dataEncrypted.Length];
            int[] posciones=GetPosiciones(password,level,order);
 
-           for(int i=0,pos=0,inicioFila;i<dataEncrypted.Length;i++){
+           for(int i=0,pos=0,inicioFila=0;i<dataEncrypted.Length;i++){
                 if(pos==0)
                   inicioFila=i;
                dataDecrypted[i]=dataEncrypted[posciones[pos]+inicioFila];
                pos=(pos+1)%posciones.Length;
               
            }
-           return dataEncryptada;
+           return dataDecrypted;
        }
 
        private static int[] GetPosiciones(byte[] password,LevelEncrypt level,Ordre ordre){

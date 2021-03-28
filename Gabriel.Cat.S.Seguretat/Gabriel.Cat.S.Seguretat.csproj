@@ -9,7 +9,7 @@
     <Authors>Gabriel.Cat.Developer</Authors>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>1.0.2.2-Preview1.0.7</Version>
+    <Version>1.0.2.2-Preview1.0.8</Version>
     <PackageReleaseNotes>Añadido CrazyKey para poder enviar por la red una key sin problemas de seguridad (se necesita que ambos posean la key origen)</PackageReleaseNotes>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
@@ -24,14 +24,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\Gabriel.Cat.Wpf\LICENSE.txt">
+    <None Include="..\..\..\Documents\GitHub\Gabriel.Cat.S.Seguretat\Gabriel.Cat.S.Seguretat\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats\Gabriel.Cat.S.Utilitats.csproj" />
+    <PackageReference Include="Gabriel.Cat.S.Utilitats" Version="1.1.5.4" />
   </ItemGroup>
 
 </Project>

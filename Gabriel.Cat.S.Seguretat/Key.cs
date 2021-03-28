@@ -56,7 +56,7 @@ namespace Gabriel.Cat.S.Seguretat
             }
             public bool Equals(ItemKey other)
             {
-                return !Equals(other,default) && Password.Equals(other.Password) && MethodData == other.MethodData && MethodPassword.ArrayEquals(other.MethodPassword);
+                return !Equals(other,default) && Password.Equals(other.Password) && MethodData == other.MethodData && MethodPassword.Equals(other.MethodPassword);
             }
         }
 
@@ -77,13 +77,13 @@ namespace Gabriel.Cat.S.Seguretat
                 MethodLenghtEncrypted = methodGetLenghtEncrypted;
                 LengthVariable = lenghtVariable;
             }
-            public byte[] Encrypt(byte[] data, byte[] key)
+            public byte[] Encrypt(byte[] data, byte[] key,LevelEncrypt levelEncrypt)
             {
-                return MethodData(data, key);
+                return MethodData(data, key,true,levelEncrypt);
             }
-            public byte[] Decrypt(byte[] data, byte[] key)
+            public byte[] Decrypt(byte[] data, byte[] key, LevelEncrypt levelEncrypt)
             {
-                return MethodData(data, key, false);
+                return MethodData(data, key, false,levelEncrypt);
             }
 
             public ItemEncryptationData Clon()
@@ -93,7 +93,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
         public class ItemEncryptationPassword : IClonable<ItemEncryptationPassword>
         {
-            public delegate string MethodEncryptNonReversible(byte[] password);
+            public delegate byte[] MethodEncryptNonReversible(byte[] password);
             public MethodEncryptNonReversible MethodPassword { get; set; }
             public bool LengthVariable{get;set;}
             public ItemEncryptationPassword(MethodEncryptNonReversible methodPassword, bool lengthVariable)
@@ -235,7 +235,7 @@ namespace Gabriel.Cat.S.Seguretat
         public FileInfo Encrypt(FileInfo fileToEncrypt,LevelEncrypt levelEncryptData=LevelEncrypt.Normal, int bufferLength = 100 * 1024)
         {
             string pathFileEncrypted = System.IO.Path.Combine(fileToEncrypt.Directory.FullName, Path.GetFileNameWithoutExtension(fileToEncrypt.Name) + " encrypted_" + DateTime.Now.Ticks + "" + MiRandom.Next(int.MaxValue) + fileToEncrypt.Extension);
-            Encrypt(fileToEncrypt, pathFileEncrypted,levelEncrypt, bufferLength);
+            Encrypt(fileToEncrypt, pathFileEncrypted, levelEncryptData, bufferLength);
             return new FileInfo(pathFileEncrypted);
         }
         /// <summary>
@@ -247,7 +247,7 @@ namespace Gabriel.Cat.S.Seguretat
         {
             Key keyEncrypted = keyToEncrypt.Clon(siempreGenerarLaMisma);
             for (int i = 0; i < keyToEncrypt.ItemsKey.Count; i++)//si tiene algun disimulat puede variar las contraseñas es por eso que si se quiere generar la misma debe ser quitado en el clon :)
-                keyEncrypted.ItemsKey[i].Password = keyToEncrypt.Encrypt(keyEncrypted.ItemsKey[i].Password,levelEncrypt).Substring(0, keyEncrypted.ItemsKey[i].Password.Length);
+                keyEncrypted.ItemsKey[i].Password = keyToEncrypt.Encrypt(keyEncrypted.ItemsKey[i].Password, levelEncryptData).SubArray(0, keyEncrypted.ItemsKey[i].Password.Length);
             return keyEncrypted;
         }
         public byte[] Decrypt(byte[] data,LevelEncrypt levelEncryptData=LevelEncrypt.Normal)
@@ -416,7 +416,7 @@ namespace Gabriel.Cat.S.Seguretat
             key.InitMethods();
             for (int i = 0; i < passwords.Count; i++)
             {
-                if (!String.IsNullOrEmpty(passwords[i]))
+                if (passwords[i].Length==0)
                     key.ItemsKey.Add(new ItemKey(password: passwords[i]) { MethodData = CESAR });
             }
             if (passwords.Count != 0)
@@ -429,7 +429,7 @@ namespace Gabriel.Cat.S.Seguretat
         }
 
 
-        private static int GetLenghtMetodosCifradoLongitudInvariable(int lenght)
+        private static int GetLenghtMetodosCifradoLongitudInvariable(int lenght,LevelEncrypt levelEncrypt=LevelEncrypt.Normal)
         {
             return lenght;
         }

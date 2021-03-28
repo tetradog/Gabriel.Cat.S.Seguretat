@@ -78,11 +78,11 @@ namespace Gabriel.Cat.S.Seguretat
                 }
 
             }
-            static void TrataArray(int[] array,string password,MetodoEncrypt metodo)
+            static void TrataArray(int[] array,byte[] passwordBytes, MetodoEncrypt metodo)
             {
 
 
-                byte[] passwordBytes = Gabriel.Cat.S.Utilitats.Serializar.GetBytes(password);
+            
                 switch(metodo)
                 {
                     case MetodoEncrypt.Cesar:CesarArray(array, passwordBytes);break;
